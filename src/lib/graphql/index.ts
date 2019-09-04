@@ -104,7 +104,7 @@ export function createGraphQLServer<TData>(expressApp: express.Application, opti
         GraphQLHTTP({
             schema,
             context,
-            graphiql: options.editorEnabled,
+            graphiql: options.editorEnabled || true,
             formatError: error => ({
                 code: getErrorCode(error.message),
                 message: getErrorMessage(error.message),
