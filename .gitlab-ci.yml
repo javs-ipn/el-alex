@@ -1,0 +1,22 @@
+stages:
+  - unitTest
+  - sonar
+unitTest:
+  image: netlogistikrobot/typescript:2.6.1
+  stage: unitTest
+  script:
+    -  npm install
+    -  npm run test
+  artifacts:
+    paths:
+    - coverage/lcov.info
+    expire_in: 1 day
+sonarQubeAnalysis:
+  image: netlogistikrobot/sonar-scanner
+  stage: sonar
+  script:
+    -  npm install
+    -  echo "sonar.host.url=https://sonar.netlogistik.com" >> /opt/sonar-scanner/conf/sonar-scanner.properties
+    -  sonar-scanner
+  only:
+    - develop
