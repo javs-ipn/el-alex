@@ -1,10 +1,10 @@
-import { CustomEstafetaLabelResponse } from './../../types/Estafeta/custom-label-response.interface';
 import * as XMLJS from 'xml2js';
-import axios, { AxiosRequestConfig, AxiosResponse, AxiosPromise } from 'axios';
-import { PackageDimension } from '../../types/PackageDimensions/package-dimensions.class';
-import { GenericBussinessLogicError } from './../../errors/Generic/generic-bussinessLogic.error';
+import axios, { AxiosPromise, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { ConfigOptions } from './../../types/Estafeta/config-options.interface';
 import { Credential } from './../../models/Credential/Credential';
+import { CustomEstafetaLabelResponse } from './../../types/Estafeta/custom-label-response.interface';
+import { GenericBussinessLogicError } from './../../errors/Generic/generic-bussinessLogic.error';
+import { PackageDimension } from '../../types/PackageDimensions/package-dimensions.class';
 import { Rate } from './../../models/Rate/rate.model';
 import { Service } from 'typedi';
 
@@ -200,7 +200,7 @@ export class EstafetaShipmentService {
      */
     private getTotalWeight(packagesDimensionsInfo: PackageDimension[]): number {
         let totalWeight = 0;
-        packagesDimensionsInfo.map((packageDimension: PackageDimension) => {
+        packagesDimensionsInfo.forEach((packageDimension: PackageDimension) => {
             const packageDimensionObject = new PackageDimension();
             packageDimensionObject.dimensions = packageDimension.dimensions;
             packageDimensionObject.packageNumber = packageDimension.packageNumber;

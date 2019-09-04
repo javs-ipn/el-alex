@@ -1,15 +1,11 @@
-import { CourierService } from './../../models/CourierService/CourierService';
-import { Rate } from './../../models/Rate/rate.model';
-import { EstafetaShipmentService } from './../../services/Estafeta/estafeta-shipment.service';
+import { Body, JsonController, Post } from 'routing-controllers';
 import { Courier } from './../../models/Courier/Courier';
-import { EstafetaRateService } from './../../services/Estafeta/estafeta-rate.service';
-import {
-    Body,
-    JsonController,
-    Post
-} from 'routing-controllers';
-import { GenericRateObject } from '../../types/RateRequest/generic-rate-object.class';
+import { CourierService } from './../../models/CourierService/CourierService';
 import { Credential } from '../../models/Credential/Credential';
+import { EstafetaRateService } from './../../services/Estafeta/estafeta-rate.service';
+import { EstafetaShipmentService } from './../../services/Estafeta/estafeta-shipment.service';
+import { GenericRateObject } from '../../types/RateRequest/generic-rate-object.class';
+import { Rate } from './../../models/Rate/rate.model';
 
 @JsonController('/estafeta')
 export class EquipmentController {
@@ -21,14 +17,11 @@ export class EquipmentController {
     @Post('/rate')
     public async test(@Body() genericRate: GenericRateObject): Promise<any> {
         const credential = new Credential();
-        credential.username = 'AdminUser';
-        credential.password = ',1,B(vVi';
-        credential.options = '{ "userId": 1}';
         const courier = new Courier();
         courier.rateAction = 'FrecuenciaCotizador';
         courier.rateRequestUrl = 'http://frecuenciacotizador.estafeta.com/Service.asmx';
         credential.courier = courier;
-        const requestString = await this.es.createRateRequestXmlString(genericRate, credential);
+        const requestString = this.es.createRateRequestXmlString(genericRate, credential);
         return Promise.resolve(this.es.requestRateEstafeta(requestString, credential.courier));
 
     }
@@ -36,9 +29,6 @@ export class EquipmentController {
     @Post('/shipment')
     public async test1(): Promise<any> {
         const credential = new Credential();
-        credential.username = 'prueba1';
-        credential.password = 'lAbeL_K_11';
-        credential.options = '{ "suscriberId": 28, "customerNumber": "0000000", "officeNum": 130 }';
         const courier = new Courier();
         courier.shipmentAction = 'CreateLabelExtended';
         courier.shipmentRequestUrl = 'https://labelqa.estafeta.com/EstafetaLabel20/services/EstafetaLabelWS?wsdl';
@@ -76,7 +66,7 @@ export class EquipmentController {
         service.courier = courier;
 
         rate.service = service;
-        const requestString = await this.spr.createSingleRequestXmlString(rate, credential);
+        const requestString = this.spr.createSingleRequestXmlString(rate, credential);
         return Promise.resolve(this.spr.requestSingleLabelEstafetaExtended(requestString, credential));
 
     }

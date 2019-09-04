@@ -134,7 +134,7 @@ export class EstafetaRateService {
      */
     private isPackageType(ratePackages: RatePackage[]): boolean {
         let isPackage = false;
-        ratePackages.map((ratePackage: RatePackage) => {
+        ratePackages.forEach((ratePackage: RatePackage) => {
             if (ratePackage.shipmentRateDetail.contentType === Content.DOCUMENTS) {
                 isPackage = true;
             }
@@ -150,7 +150,7 @@ export class EstafetaRateService {
      */
     private getTotalLength(ratePackages: RatePackage[]): number {
         let totalLength = 0;
-        ratePackages.map((ratePackage: RatePackage) => {
+        ratePackages.forEach((ratePackage: RatePackage) => {
             totalLength += ratePackage.packageInfo.length;
         });
         return totalLength;
@@ -163,7 +163,7 @@ export class EstafetaRateService {
      */
     private getTotalWidth(ratePackages: RatePackage[]): number {
         let totalWidth = 0;
-        ratePackages.map((ratePackage: RatePackage) => {
+        ratePackages.forEach((ratePackage: RatePackage) => {
             totalWidth += ratePackage.packageInfo.width;
         });
         return totalWidth;
@@ -176,7 +176,7 @@ export class EstafetaRateService {
      */
     private getTotalHeight(ratePackages: RatePackage[]): number {
         let totalHeight = 0;
-        ratePackages.map((ratePackage: RatePackage) => {
+        ratePackages.forEach((ratePackage: RatePackage) => {
             totalHeight += ratePackage.packageInfo.height;
         });
         return totalHeight;
@@ -189,7 +189,7 @@ export class EstafetaRateService {
      */
     private getTotalWeight(ratePackages: RatePackage[]): number {
         let totalWeight = 0;
-        ratePackages.map((ratePackage: RatePackage) => {
+        ratePackages.forEach((ratePackage: RatePackage) => {
             totalWeight += ratePackage.packageInfo.weight;
         });
         return totalWeight;

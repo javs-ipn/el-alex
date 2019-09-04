@@ -1,5 +1,5 @@
 export function getOsEnv(key: string): string {
-    return process.env[key] as string;
+    return process.env[key];
 }
 
 export function toNumber(value: string): number {
