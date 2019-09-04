@@ -4,6 +4,7 @@ import { CourierService } from './../../models/CourierService/CourierService';
 import { Credential } from '../../models/Credential/Credential';
 import { EstafetaRateService } from './../../services/Estafeta/estafeta-rate.service';
 import { EstafetaShipmentService } from './../../services/Estafeta/estafeta-shipment.service';
+import { EstafetaTrackingService } from './../../services/Estafeta/estafeta-tracking.service';
 import { GenericRateObject } from '../../types/RateRequest/generic-rate-object.class';
 import { Rate } from './../../models/Rate/rate.model';
 
@@ -12,7 +13,8 @@ export class EquipmentController {
 
     constructor(
         private es: EstafetaRateService,
-        private spr: EstafetaShipmentService) { }
+        private spr: EstafetaShipmentService,
+        private tr: EstafetaTrackingService) { }
 
     @Post('/rate')
     public async test(@Body() genericRate: GenericRateObject): Promise<any> {
@@ -23,6 +25,18 @@ export class EquipmentController {
         credential.courier = courier;
         const requestString = this.es.createRateRequestXmlString(genericRate, credential);
         return Promise.resolve(this.es.requestRateEstafeta(requestString, credential.courier));
+
+    }
+
+    @Post('/tracking')
+    public async tracking(@Body() genericRate: GenericRateObject): Promise<any> {
+        const credential = new Credential();
+        const courier = new Courier();
+        courier.trackingAction = 'ExecuteQuery';
+        courier.trackingRequestUrl = 'https://trackingqa.estafeta.com/Service.asmx?wsdl';
+        credential.courier = courier;
+        const requestString = this.tr.createTrackingXmlString('0050000000130700436245', credential);
+        return Promise.resolve(this.tr.requestTracking(requestString, credential));
 
     }
 
