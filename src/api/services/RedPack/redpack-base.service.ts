@@ -50,7 +50,7 @@ export class RedpackBaseService {
 
     /**
      * @description Gets element to insured  add a SOAP request
-     * @param {WaybillDetail} detail
+     * @param {Rate} rate
      * @returns {string} Returns <xsd:valorDeclarado> element.
      */
     public shipmentInsuredXMLString(rate: Rate): string {
