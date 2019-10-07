@@ -3,7 +3,7 @@ import { CustomRedpackCoverageResponse } from './../../types/Redpack/custom-redp
 import { CustomRedpackInsuredResponse } from './../../types/Redpack/custom-insured-response.interface';
 import { CustomRedpackLabelResponse } from '../../types/Redpack/custom-label-response.interface';
 import { HandlerErrorRedpack } from '../../types/Redpack/handler-error-redpack.class';
-import { Rate } from 'src/api/models/Rate/rate.model';
+import { Rate } from '../../models/Rate/rate.model';
 export class RedpackBaseService {
     public static SUCCESS_CODE_REDPACK = '1';
     public static WAYBILLNUMBER_ALREADY_IN_USE_REDPACK = '7';

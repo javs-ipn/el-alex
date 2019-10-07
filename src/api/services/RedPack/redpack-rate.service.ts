@@ -6,11 +6,11 @@ import { CustomRedpackCoverageResponse } from '../../types/Redpack/custom-redpac
 import { GenericRateObject } from '../../types/RateRequest/generic-rate-object.class';
 import { RedpackBaseService } from './redpack-base.service';
 import { Service } from 'typedi';
-import { Courier } from 'src/api/models/Courier/Courier';
-import { ConfigOptions } from 'src/api/types/RedPack/config-options.interface';
+import { Courier } from '../../models/Courier/Courier';
+import { ConfigOptions } from '../../types/RedPack/config-options.interface';
 import { RateResponse } from '../../types/RateResponse/GenericRate/rate.response.interface';
-import { CustomRedpackRateResponse } from 'src/api/types/RateResponse/RedPack/custom-redpack-rate-response.interface';
-import { RateInfo } from 'src/api/types/RateResponse/GenericRate/rate-info.interface';
+import { CustomRedpackRateResponse } from '../../types/RateResponse/RedPack/custom-redpack-rate-response.interface';
+import { RateInfo } from '../../types/RateResponse/GenericRate/rate-info.interface';
 
 @Service()
 export class RedpackRateService extends RedpackBaseService {
