@@ -7,6 +7,12 @@ export class Rate {
     @PrimaryGeneratedColumn()
     public id: number;
 
+    @Column({ name: 'insurance', type: 'smallint', nullable: false, comment: 'Package insurance'})
+    public insurance: boolean;
+
+    @Column({ name: 'customsValue', type: 'int', nullable: false, comment: 'Insurance amount'})
+    public customsValue: number;
+
     @Column({ name: 'internal_id', type: 'uniqueidentifier', nullable: false, comment: 'Identifier for the system', generated: true })
     public internalId: string;
 
@@ -129,6 +135,7 @@ export class Rate {
 
     @ManyToOne(type => CourierService, service => service.rates)
     @JoinColumn({ name: 'service_id' })
-    public service: CourierService;
+    // !@todo Unset optional after changes
+    public service?: CourierService;
 
 }
