@@ -5,5 +5,5 @@ export class GenericBussinessLogicError extends HttpError {
     constructor(message: string, errors?: any) {
         super(409, message);
         this.errors = errors ? errors : [];
-     }
+    }
 }

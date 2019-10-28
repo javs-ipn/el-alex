@@ -1,7 +1,7 @@
 import { Credential } from '../../models/Credential/Credential';
 import { GenericRateObject } from '../../types/RateRequest/generic-rate-object.class';
 import { RateResponse } from '../../types/RateResponse/GenericRate/rate.response.interface';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import { Courier } from '../../models/Courier/Courier';
 import { RedpackRateService } from '../../services/Redpack/redpack-rate.service';
 import { GenericBussinessLogicError } from '../../errors/Generic/generic-bussinessLogic.error';
