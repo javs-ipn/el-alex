@@ -1,6 +1,5 @@
 
-export interface GenericShipmentResponse {
-
+export interface ShipmentResponse {
     externalId: string;
     waybillId: string;
     waybillNumber: string;

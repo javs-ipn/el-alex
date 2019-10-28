@@ -36,7 +36,7 @@ export class RateService {
         try {
             const coverageRequestString = this.redpackCoverageService.generateCoverageXMLString(genericRateObject, credential);
             const foundRates = await this.redpackCoverageService.requestCoverageService(coverageRequestString, credential.courier);
-            coverageResponse = this.redpackCoverageService.getGenericCoverageResponse((foundRates[0]), credential.courier);
+            coverageResponse = this.redpackCoverageService.getGenericCoverageResponse((_.first(foundRates)), credential.courier);
             return Promise.resolve(coverageResponse);
         } catch (error) {
             throw new GenericBussinessLogicError(error);
