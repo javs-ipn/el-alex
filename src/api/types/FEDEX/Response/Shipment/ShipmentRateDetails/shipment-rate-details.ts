@@ -1,0 +1,43 @@
+import { Taxes } from '../ShipmentRating/taxes.interface';
+import { CurrencyExchangeRate } from '../CurrencyExchangeRate/currency-exchange-rate.interface';
+import { TotalBillingWeight } from '../TotalBillingWeight/total-billing-weight.interface';
+import { TotalBaseCharge } from '../TotalBaseCharge/total-base-charge.interface';
+import { TotalFreightDiscounts } from '../ShipmentRating/total-freight-discounts.interface';
+import { TotalNetFreight } from '../ShipmentRating/total-net-freight.interface';
+import { TotalSurcharges } from '../ShipmentRating/total-surchanges.interface';
+import { TotalNetFedExCharge } from '../ShipmentRating/total-net-fed-ex-charge.interface';
+import { TotalTaxes } from '../ShipmentRating/total-taxes.interface';
+import { TotalRebates } from '../ShipmentRating/total-rebates.interface';
+import { TotalNetCharge } from '../ShipmentRating/total-net-charges.inteface';
+import { TotalDutiesAndTaxes } from '../ShipmentRating/total-duties-and-taxes.interface';
+import { TotalAncillaryFeesAndTaxes } from '../ShipmentRating/total-ancillary-fees-and-taxes.interface';
+import { TotalDutiesTaxesAndFees } from '../ShipmentRating/total-duties-taxes-and-fees.interfaces';
+import { TotalNetChargeWithDutiesAndTaxes } from '../ShipmentRating/total-net-charge-with-duties-and-taxes.interface';
+import { Surcharges } from '../ShipmentRating/surcharges.interface';
+
+export interface ShipmentRateDetails {
+    RateType: string;
+    RateScale: string;
+    RateZone: string;
+    PricingCode: string;
+    RatedWeightMethod: string;
+    CurrencyExchangeRate: CurrencyExchangeRate;
+    DimDivisor: number;
+    DimDivisorType: string;
+    FuelSurchargePercent: number;
+    TotalBillingWeight: TotalBillingWeight;
+    TotalBaseCharge: TotalBaseCharge;
+    TotalFreightDiscounts: TotalFreightDiscounts;
+    TotalNetFreight: TotalNetFreight;
+    TotalSurcharges: TotalSurcharges;
+    TotalNetFedExCharge: TotalNetFedExCharge;
+    TotalTaxes: TotalTaxes;
+    TotalNetCharge: TotalNetCharge;
+    TotalRebates: TotalRebates;
+    TotalDutiesAndTaxes: TotalDutiesAndTaxes;
+    TotalAncillaryFeesAndTaxes: TotalAncillaryFeesAndTaxes;
+    TotalDutiesTaxesAndFees: TotalDutiesTaxesAndFees;
+    TotalNetChargeWithDutiesAndTaxes: TotalNetChargeWithDutiesAndTaxes;
+    Surcharges: Surcharges;
+    Taxes: Taxes;
+}
