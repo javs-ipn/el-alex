@@ -10,6 +10,10 @@ import { ShipmentRequestEnvioClickService } from '../../services/EnvioClick/ship
 import { TrackingRequestEnvioClickService } from '../../services/EnvioClick/tracking-request-envioclick.service';
 import { TrackingMultiEnvioClickService } from '../../services/EnvioClick/tracking-multi-packages-envioclick.service';
 import {RateResponse} from '../../types/RateResponse/GenericRate/rate.response.interface';
+import {EnvioClickRateRequest} from '../../types/EnvioClick/RateRequest/envioclick-rate-request.interface';
+import {EnvioClickRateResponse} from '../../types/EnvioClick/RateResponse/envioclick-rate-response.interface';
+import * as _ from 'lodash';
+import {GenericBussinessLogicError} from '../../errors/Generic/generic-bussinessLogic.error';
 
 // !@Todo Temporal user & pass
 const TEMPUSER = 'medistiklogmx';
@@ -73,9 +77,23 @@ export class EnvioClickRequestController {
         credential.courier = courier;
         credential.username = TEMPUSER;
         credential.password = TEMPAPIKEY;
-        const envioclickRate = await this.rateEnvioClickService.generateObject(genericRate);
-        return Promise.resolve(this.rateEnvioClickService.rateRequest(envioclickRate, credential));
+        const response: RateResponse = this.handleEnvioClickRequest(request, credential);
+        return Promise.resolve(response);
     }
+
+    public async handleEnvioClickRequest(genericRate: GenericRateObject, EnvioClickRateRequest, credential: Credential): Promise<RateResponse> {
+        const request: EnvioClickRateRequest = await this.rateEnvioClickService.generateObject(genericRate);
+        const response: EnvioClickRateResponse =  this.rateEnvioClickService.rateRequest(request, credential);
+        try {
+            const coverageRequestString = this.redpackCoverageService.generateCoverageXMLString(genericRateObject, credential);
+            const foundRates = await this.redpackCoverageService.requestCoverageService(coverageRequestString, credential.courier);
+            coverageResponse = this.redpackCoverageService.getGenericCoverageResponse((_.first(foundRates)), credential.courier);
+            return Promise.resolve(coverageResponse);
+        } catch (error) {
+            throw new GenericBussinessLogicError(error);
+        }
+    }
+
 
     /**
      * @description Connects to EnvioClick rate service and response a rate request
@@ -149,7 +167,7 @@ export class EnvioClickRequestController {
         };
 
         courier.rateAction = 'ShipmentRequest';
-        courier.shipmentRequestUrl = 'https://api.envioclickpro.com/api/v1/shipment/request';
+        courier.shipmentRequestUrl = 'https://api.envioclickpro.com/api/v1/sandbox_shipment/request';
         credential.courier = courier;
         credential.username = TEMPUSER;
         credential.password = TEMPAPIKEY;

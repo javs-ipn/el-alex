@@ -5,7 +5,7 @@ import { Service } from 'typedi';
 import axios, { AxiosPromise, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { GenericRateObject } from 'src/api/types/RateRequest/generic-rate-object.class';
 import { Credential } from '../../models/Credential/Credential';
-import { RateRequestEnvioClick } from '../../types/EnvioClick/RateRequest/envioclick-request.interface';
+import {EnvioClickRateRequest} from '../../types/EnvioClick/RateRequest/envioclick-rate-request.interface';
 
 @Service()
 export class RateRequestEnvioClickService {
@@ -24,7 +24,7 @@ export class RateRequestEnvioClickService {
      * @param {Courier} courier - Related tenant courier
      * @returns {Promise<any>} - EnvioClick WS response
      */
-    public async rateRequest(rateRequest: RateRequestEnvioClick, credential: Credential): Promise<any> {
+    public async rateRequest(rateRequest: EnvioClickRateRequest, credential: Credential): Promise<any> {
         this.log.debug('Calling for EnvioClick api rate request');
         /// const hashedString = this.hashService.basicUsernamePassword(credential.username, credential.password);
         const axiosRequestConfig: AxiosRequestConfig = {
@@ -53,17 +53,18 @@ export class RateRequestEnvioClickService {
      * @param {string} genericRateObject - generic rate object
      * @returns {Promise<RateRequestObjectEnvioClick>} - EnvioClick rate request object
      */
-    public generateObject(genericRateObject: GenericRateObject): Promise<RateRequestEnvioClick> {
+    public generateObject(genericRateObject: GenericRateObject): Promise<EnvioClickRateRequest> {
         // TODO - get credential by tenantID
         // const customerCredential = JSON.parse(this.getCredentialOptionsByTenant(genericRateObject.tenantId));
-        const rateRequestEnvioClick: RateRequestEnvioClick = {
+        const firstPackage = _.first(genericRateObject.packages);
+        const rateRequestEnvioClick: EnvioClickRateRequest = {
             package: {
-                contentValue: genericRateObject.packages[0].customsValue,
-                description: genericRateObject.packages[0].description,
-                height: genericRateObject.packages[0].packageInfo.height,
-                length: genericRateObject.packages[0].packageInfo.length,
-                weight: genericRateObject.packages[0].packageInfo.weight,
-                width: genericRateObject.packages[0].packageInfo.width,
+                contentValue: firstPackage.customsValue,
+                description: firstPackage.description,
+                height: firstPackage.packageInfo.height,
+                length: firstPackage.packageInfo.length,
+                weight: firstPackage.packageInfo.weight,
+                width: firstPackage.packageInfo.width,
             },
             destination_zip_code: genericRateObject.recipientLocation.zipcode,
             origin_zip_code: genericRateObject.shipperLocation.zipcode,
