@@ -1,10 +1,10 @@
 import * as _ from 'lodash';
+import axios, { AxiosPromise, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { DHLOptions } from '../../../types/DHL/Options/dhl-options.interface';
 import { HashService } from '../../Hash/hash-methods.service';
 import { Logger, LoggerInterface } from '../../../../decorators/Logger';
+import { RateRequestObjectDHL } from '../../../types/DHL/Rate/RateRequest/dhl-rate-request-object.interface';
 import { Service } from 'typedi';
-import { DHLOptions } from '../../../types/DHL/Options/dhl-options.interface';
-import axios, { AxiosPromise, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { RateRequestObjectDHL } from './types/dhl-rate-request-object.interface';
 
 @Service()
 export class DHLApiService {
@@ -23,7 +23,7 @@ export class DHLApiService {
     ) {
     }
 
-    public async rateRequest(rateRequest: RateRequestObjectDHL, options: DHLOptions ): Promise<any> {
+    public async rateRequest(rateRequest: RateRequestObjectDHL, options: DHLOptions): Promise<any> {
         this.log.debug('Calling for dhl api rate request');
         const hashedString = this.hashService.basicUsernamePassword(options.username, options.password);
         const axiosRequestConfig: AxiosRequestConfig = {
