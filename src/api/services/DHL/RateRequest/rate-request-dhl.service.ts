@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import { HashService } from '../../Hash/hash-methods.service';
 import { Logger, LoggerInterface } from '../../../../decorators/Logger';
 import { Service } from 'typedi';
-import { DHLOptions } from 'src/api/types/DHL/Options/dhl-options.interface';
+import { DHLOptions } from '../../../types/DHL/Options/dhl-options.interface';
 import axios, { AxiosPromise, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { RateRequestObjectDHL } from './types/dhl-rate-request-object.interface';
 
