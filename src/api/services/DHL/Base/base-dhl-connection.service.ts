@@ -4,10 +4,10 @@ import { DHLOptions } from '../../../types/DHL/Options/dhl-options.interface';
 import { GenericBussinessLogicError } from '../../../errors/Generic/generic-bussinessLogic.error';
 import { HashService } from '../../Hash/hash-methods.service';
 import { Logger, LoggerInterface } from '../../../../decorators/Logger';
-import { Notification } from '../../../types/DHL/ShipmentResponse/dhl-notification.interface';
+import { Notification } from '../../../types/DHL/Shipment/ShipmentResponse/dhl-notification.interface';
 import { Service } from 'typedi';
-import { ShipmentRequestObject } from '../../../types/DHL/ShipmentRequest/dhl-shipment-request.interface';
-import { ShipmentResponseObject } from '../../../types/DHL/ShipmentResponse/dhl-shipment-response-object.interface';
+import { ShipmentRequestObject } from '../../../types/DHL/Shipment/ShipmentRequest/dhl-shipment-request.interface';
+import { ShipmentResponseObject } from '../../../types/DHL/Shipment/ShipmentResponse/dhl-shipment-response-object.interface';
 
 @Service()
 export class DHLApiService {
