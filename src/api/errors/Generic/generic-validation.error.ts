@@ -3,8 +3,8 @@ import { ValidationError } from 'class-validator';
 
 export class GenericValidationError extends HttpError {
     public validationErrors: ValidationError[];
-    constructor(message: string, validationErros: ValidationError[]) {
+    constructor(message: string, validationErrors: ValidationError[]) {
         super(400, message);
-        this.validationErrors = validationErros;
+        this.validationErrors = validationErrors;
     }
 }

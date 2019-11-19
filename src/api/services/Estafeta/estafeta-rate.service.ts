@@ -2,12 +2,12 @@ import * as XMLJS from 'xml2js';
 import axios, { AxiosPromise, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { ConfigOptions } from './../../types/Estafeta/config-options.interface';
 import { Content } from '../../types/enums/content-enum';
+import { Courier } from '../../models/Courier/Courier';
 import { Credential } from './../../models/Credential/Credential';
 import { GenericRateObject } from './../../types/RateRequest/generic-rate-object.class';
 import { RateLocation } from './../../types/RateRequest/rate-location.class';
-import { RatePackage } from 'src/api/types/RateRequest/rate-package.class';
+import { RatePackage } from '../../types/RateRequest/rate-package.class';
 import { Service } from 'typedi';
-import { Courier } from 'src/api/models/Courier/Courier';
 
 @Service()
 export class EstafetaRateService {
