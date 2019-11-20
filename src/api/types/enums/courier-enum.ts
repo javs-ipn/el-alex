@@ -1,4 +1,4 @@
-export enum Courier {
+export enum CourierEnum {
     'ESTAFETA' = 'ESTAFETA',
     'DHL' = 'DHL',
     'FEDEX' = 'FEDEX',

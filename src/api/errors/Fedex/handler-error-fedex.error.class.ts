@@ -1,5 +1,5 @@
-import { GenericBussinessLogicError } from '../../../../../waybill-delivery-service-api/src/api/errors/Generic/generic-bussinessLogic.error';
-import { FedexNotificationResponse } from '../../../../../waybill-delivery-service-api/src/api/types/FEDEX/Notification/fedex-notification-response.interface';
+import { FedexNotificationResponse } from './../../types/FEDEX/Response/Notification/fedex-notification-response.interface';
+import { GenericBussinessLogicError } from './../Generic/generic-bussinessLogic.error';
 
 export class HandlerErrorFedex {
     public static AUTH_FAILED = { code: '1000', description: 'Authentication Failed', translateConstant: 'FEDEX_AUTH_FAILED' };

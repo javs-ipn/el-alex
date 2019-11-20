@@ -5,7 +5,7 @@ import * as XMLJS from 'xml2js';
 import axios, { AxiosRequestConfig } from 'axios';
 import { AdditionalCharges } from '../../../types/RateResponse/AdditionalCharges/additional-charges.interface';
 import { ClientDetail } from '../../../types/Credential/Fedex/ClientDetail/client-detail.interface';
-import { Courier } from '../../../types/enums/courier-enum';
+import { CourierEnum } from './../../../types/enums/courier-enum';
 import { CourierRate } from '../../../types/RateResponse/courier-rate.interface';
 import { CourierService } from '../../../models/CourierService/CourierService';
 import { DropOff } from '../../../types/enums/dropoff-enum';
@@ -20,12 +20,12 @@ import { HandlerErrorFedex } from '../../../errors/Fedex/handler-error-fedex.err
 import { HttpStatusCodes } from '../../../types/enums/http-status-codes.enum';
 import { Logger, LoggerInterface } from '../../../../decorators/Logger';
 import { Names } from '../../../types/FEDEX/Rate/ServiceDescription/names.interface';
+import { PackageUtilService } from './../../Package/package.util.service';
 import { Rate } from '../../../models/Rate/rate.model';
 import { RatedShipmentDetails } from '../../../types/FEDEX/Rate/RateReplyDetail/rated-shipment-details.interface';
 import { RatePackage } from '../../../types/RateRequest/rate-package.class';
 import { RatePackageDimensions } from '../../../types/RateRequest/rate-package-dimensions.class';
 import { RateReplyDetail } from '../../../types/FEDEX/Rate/RateReplyDetail/rate-reply-detail.interface';
-import { RateService } from '../../Rate/rate.service';
 import { RequestedPackageLineItem } from '../../../types/FEDEX/Request/RequestedPackageLineItem/requested-package-line-item.interface';
 import { RequestedShipment } from '../../../types/FEDEX/Request/RequestedShipment/requested-shipment.class';
 import { RequestedShipmentOptions } from '../../../types/FEDEX/Request/RequestedShipment/requested-shipment-options.interface';
@@ -121,7 +121,7 @@ export class FedexRateService extends FedexBaseService {
             rates: [],
         };
         const fedexCourierRate: CourierRate = {
-            name: Courier.FEDEX,
+            name: CourierEnum.FEDEX,
             services: [],
         };
         _.forEach(availableRates, (rate: Rate) => {
@@ -167,7 +167,7 @@ export class FedexRateService extends FedexBaseService {
                 rateToSave.dimensionsPackages = this.getDimensionsJsonObjectOfAllPackages(genericRateObject.packages);
                 rateToSave.extendedZoneShipment = this.isExtendedService(ratedShipmentDetails.ShipmentRateDetail.Surcharges);
                 rateToSave.internalId = INTERNAL_ID;
-                rateToSave.multipleShipment = RateService.isMultipleShipment(genericRateObject.packages);
+                rateToSave.multipleShipment = PackageUtilService.isMultipleShipment(genericRateObject.packages);
                 rateToSave.packageType = ratedPackage.shipmentRateDetail.contentType;
                 rateToSave.rated = true;
                 rateToSave.serviceId = this.findFedexServiceId(courierServices, rateReply.ServiceType);
