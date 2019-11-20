@@ -22,7 +22,7 @@ export class Credential {
     public tenantId: string;
 
     @Column({ name: 'client_name' })
-    public clientName: number;
+    public clientName: string;
 
     @Column({ name: 'courier_id' })
     public courierId: number;

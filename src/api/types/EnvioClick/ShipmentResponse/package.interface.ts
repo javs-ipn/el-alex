@@ -1,5 +1,6 @@
 export interface Package {
-    contentValue?: number;
+    description: string;
+    contentValue: number;
     weight: number;
     length: number;
     height: number;

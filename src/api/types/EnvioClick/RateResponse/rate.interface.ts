@@ -1,5 +1,5 @@
 export interface Rate {
-    idRates: number;
+    idRate: number;
     idProduct: number;
     product: string;
     vehicle: string;

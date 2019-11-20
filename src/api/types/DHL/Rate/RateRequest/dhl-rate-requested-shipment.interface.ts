@@ -1,10 +1,9 @@
-import { Timestamp } from 'typeorm';
 import { Ship } from './dhl-rate-ship.interface';
 import { RequestedPackages } from './dhl-rate-requested-packages.interface';
 
 export interface RequestedShipment {
     DropOffType: string;
-    ShipTimestamp: Timestamp;
+    ShipTimestamp: string;
     UnitOfMeasurement: string;
     Content: string;
     PaymentInfo: string;
