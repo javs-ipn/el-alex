@@ -8,6 +8,7 @@ import {
     UpdateDateColumn
 } from 'typeorm';
 import { Courier } from '../Courier/Courier';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 @Entity('credential')
 export class Credential {
@@ -51,4 +52,9 @@ export class Credential {
     @ManyToOne(type => Courier, courier => courier.credentials)
     @JoinColumn({ name: 'courier_id' })
     public courier: Courier;
+
+    @Column({ name: 'waybill_range_services' })
+    @IsNotEmpty()
+    @IsString()
+    public waybillRangeServices: string;
 }

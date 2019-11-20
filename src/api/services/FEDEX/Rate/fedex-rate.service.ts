@@ -4,11 +4,11 @@ import * as XMLJS from 'xml2js';
 import axios, { AxiosRequestConfig } from 'axios';
 import { ClientDetail } from '../../../types/Credential/Fedex/ClientDetail/client-detail.interface';
 import { FedexCredential } from '../../../types/Credential/Fedex/FedexCredential/fedex-credential.inteface';
-import { FedexNotificationResponse } from '../../../types/FEDEX/Response/Notification/fedex-notification-response.interface';
+// import { FedexNotificationResponse } from '../../../types/FEDEX/Response/Notification/fedex-notification-response.interface';
 import { FedexRateResponse } from '../../../types/FEDEX/Rate/FedexRateResponse/fedex-rate-response.interface';
 import { GenericBussinessLogicError } from '../../../errors/Generic/generic-bussinessLogic.error';
 import { GenericRateObject } from '../../../types/RateRequest/generic-rate-object.class';
-import { HandlerErrorFedex } from '../../../errors/Fedex/handler-error-fedex.error.class';
+// import { HandlerErrorFedex } from '../../../errors/Fedex/handler-error-fedex.error.class';
 import { Logger, LoggerInterface } from '../../../../decorators/Logger';
 import { RatePackage } from '../../../types/RateRequest/rate-package.class';
 import { RateReplyDetail } from '../../../types/FEDEX/Rate/RateReplyDetail/rate-reply-detail.interface';
@@ -104,8 +104,8 @@ export class FedexRateService extends FedexBaseService {
     private handleRateResponse(fedexRateResponse: FedexRateResponse): void {
         if (fedexRateResponse.HighestSeverity.toUpperCase() === this.ERROR
             || fedexRateResponse.HighestSeverity.toUpperCase() === this.FAILURE_MESSAGE) {
-            const notification: FedexNotificationResponse = this.getFedexNotification(fedexRateResponse.Notifications);
-            HandlerErrorFedex.handlerRequestError(notification);
+            // const notification: FedexNotificationResponse = this.getFedexNotification(fedexRateResponse.Notifications);
+            // HandlerErrorFedex.handlerRequestError(notification);
         }
     }
     /**

@@ -10,7 +10,6 @@ import {
     OneToMany
 } from 'typeorm';
 import { Courier } from '../Courier/Courier';
-import { IsNotEmpty, IsString } from 'class-validator';
 
 @Entity('courier_service')
 export class CourierService {
@@ -52,11 +51,6 @@ export class CourierService {
 
     @Column({ name: 'courier_id' })
     public courierId: number;
-
-    @Column({ name: 'waybill_range_services' })
-    @IsNotEmpty()
-    @IsString()
-    public waybillRangeServices: string;
 
     @UpdateDateColumn({ name: 'updated' })
     public updated: Date;

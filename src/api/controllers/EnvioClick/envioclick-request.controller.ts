@@ -4,17 +4,12 @@ import {Credential} from '../../models/Credential/Credential';
 import {GenericTrakingObject} from '../../types/RateRequest/generic-traking-object.class';
 import {GenericRateObject} from '../../types/RateRequest/generic-rate-object.class';
 import {Rate} from '../../models/Rate/rate.model';
-import {RateRequestEnvioClickService} from '../../services/EnvioClick/rate-request-envioclick.service';
 import {MultiRateEnvioClickService} from '../../services/EnvioClick/rate-multi-packages-envioclick.service';
 import {ShipmentRequestEnvioClickService} from '../../services/EnvioClick/shipment-request-envioclick.service';
 import {TrackingRequestEnvioClickService} from '../../services/EnvioClick/tracking-request-envioclick.service';
 import {TrackingMultiEnvioClickService} from '../../services/EnvioClick/tracking-multi-packages-envioclick.service';
-import {RateResponse} from '../../types/RateResponse/GenericRate/rate.response.interface';
-import {EnvioClickRateRequest} from '../../types/EnvioClick/RateRequest/envioclick-rate-request.interface';
-import {EnvioClickRateResponse} from '../../types/EnvioClick/RateResponse/envioclick-rate-response.interface';
 import * as _ from 'lodash';
-import {GenericBussinessLogicError} from '../../errors/Generic/generic-bussinessLogic.error';
-import {ShipmentResponse} from '../../types/ShipmentResponse/generic-shipment-response.interface';
+// import {ShipmentResponse} from '../../types/ShipmentResponse/generic-shipment-response.interface';
 
 // !@Todo Temporal user & pass
 const TEMPUSER = 'medistiklogmx';
@@ -27,7 +22,6 @@ export class EnvioClickRequestController {
         private shipmentEnvioClickService: ShipmentRequestEnvioClickService,
         private trackingEnvioClickService: TrackingRequestEnvioClickService,
         private trackingMultiEnvioClickService: TrackingMultiEnvioClickService,
-        private rateEnvioClickService: RateRequestEnvioClickService,
         private multiRatenvioClickService: MultiRateEnvioClickService) {
     }
 
@@ -69,34 +63,18 @@ export class EnvioClickRequestController {
      * @description Connects to EnvioClick rate service and response a rate request
      * @param genericRate Generic object Rate
      */
-    @Post('/rate')
-    public async rate(@Body() genericRate: GenericRateObject): Promise<RateResponse> {
-        const credential = new Credential();
-        const courier = new Courier();
-        courier.rateAction = 'Quotation';
-        courier.rateRequestUrl = 'https://api.envioclickpro.com/api/v1/quotation';
-        credential.courier = courier;
-        credential.username = TEMPUSER;
-        credential.password = TEMPAPIKEY;
-        const response: RateResponse = await this.handleEnvioClickRequest(genericRate, credential, courier);
-        return Promise.resolve(response);
-    }
-
-    /**
-     * @description Handle response of EnvioClick api and turns in generic response
-     * @param genericRate Generic object Rate
-     * @param credential Courier credential
-     */
-    public async handleEnvioClickRequest(genericRate: GenericRateObject, credential: Credential, courier: Courier): Promise<RateResponse> {
-        try {
-            const rateRequest: EnvioClickRateRequest = await this.rateEnvioClickService.generateObject(genericRate);
-            const rateResponse: EnvioClickRateResponse = await this.rateEnvioClickService.rateRequest(rateRequest, credential);
-            const genericRateResponse: any = await this.rateEnvioClickService.getGenericRateResponse(rateResponse, courier);
-            return Promise.resolve(genericRateResponse);
-        } catch (error) {
-            throw new GenericBussinessLogicError(error);
-        }
-    }
+    // @Post('/rate')
+    // public async rate(@Body() genericRate: GenericRateObject): Promise<GenericRateResponse> {
+    //     const credential = new Credential();
+    //     const courier = new Courier();
+    //     courier.rateAction = 'Quotation';
+    //     courier.rateRequestUrl = 'https://api.envioclickpro.com/api/v1/quotation';
+    //     credential.courier = courier;
+    //     credential.username = TEMPUSER;
+    //     credential.password = TEMPAPIKEY;
+    //     const response: GenericRateResponse = await this.handleEnvioClickRequest(genericRate, credential, courier);
+    //     return Promise.resolve(response);
+    // }
 
     /**
      * @description Connects to EnvioClick rate service and response a rate request
@@ -176,7 +154,7 @@ export class EnvioClickRequestController {
         credential.username = TEMPUSER;
         credential.password = TEMPAPIKEY;
 
-        const response: ShipmentResponse = await this.handleEnvioClickRequest(rate, credential, courier);
+        // const response: ShipmentResponse = await this.handleEnvioClickRequest(rate, credential, courier);
 
         const envioclickShipment = await this.shipmentEnvioClickService.generateObject(rate);
         return Promise.resolve(this.shipmentEnvioClickService.shipmentRequest(envioclickShipment, credential));

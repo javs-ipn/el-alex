@@ -97,6 +97,13 @@ export class CreateTableCredential1567040298063 implements MigrationInterface {
                     isNullable: false,
                     comment: 'Updated date for the row',
                 },
+                {
+                    name: 'waybill_range_services',
+                    type: 'nvarchar',
+                    length: '100',
+                    isNullable: false,
+                    comment: 'Waybill range available',
+                },
             ],
         });
         await queryRunner.createTable(table, true);

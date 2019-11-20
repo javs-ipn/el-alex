@@ -9,10 +9,10 @@ export class HandlerErrorFedex {
         translateConstant: 'FEDEX_API_NOT_AVAILABLE',
     };
 
-    /**
-     * @description
-     * @param {FedexNotificationResponse}message
-     */
+    // /**
+    //  * @description
+    //  * @param {FedexNotificationResponse}message
+    //  */
     // public static handlerRequestError(message: FedexNotificationResponse): void {
     //     if (this.API_NOT_AVAILABLE.code === message.Code) {
     //         throw new GenericBussinessLogicError(this.API_NOT_AVAILABLE.translateConstant, [this.API_NOT_AVAILABLE]);

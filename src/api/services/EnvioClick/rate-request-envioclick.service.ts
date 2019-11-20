@@ -7,12 +7,15 @@ import {Credential} from '../../models/Credential/Credential';
 import {EnvioClickRateRequest} from '../../types/EnvioClick/RateRequest/envioclick-rate-request.interface';
 import {EnvioClickRateResponse} from '../../types/EnvioClick/RateResponse/envioclick-rate-response.interface';
 import {Courier} from '../../models/Courier/Courier';
-import {RateResponse} from '../../types/RateResponse/GenericRate/rate.response.interface';
 import {Rate} from '../../types/EnvioClick/RateResponse/rate.interface';
-import {RateInfo} from '../../types/RateResponse/GenericRate/rate-info.interface';
+import { GenericRateResponse } from 'src/api/types/RateResponse/generic-rate-response.interface';
+import { CourierRate } from 'src/api/types/RateResponse/courier-rate.interface';
+import { RateCourierServiceType } from 'src/api/types/RateResponse/rate-courier-service-type.interface';
+import * as moment from 'moment';
 
+const DAYS_STRING = 'days';
 @Service()
-export class RateRequestEnvioClickService {
+export class EnvioClickRateService {
 
     public static UNIT_OF_MEASUREMENT = 'SI';
     public static PAYMENT_INFO = 'DDP';
@@ -81,42 +84,34 @@ export class RateRequestEnvioClickService {
      * @param {Courier} courier
      * @returns {Promise<RateRequestObjectEnvioClick>} - generic rate response object
      */
-    public getGenericRateResponse(rateResponse: EnvioClickRateResponse, courier: Courier): Promise<RateResponse> {
-        const genericRateResponse: RateResponse = {
-            data: {
-                courierName: courier.name,
-                packageInfo: {
-                    height: rateResponse.data.package.height,
-                    length: rateResponse.data.package.length,
-                    weight: rateResponse.data.package.weight,
-                    width: rateResponse.data.package.width,
-                },
-                originZipCode: rateResponse.data.originZipCode,
-                destinationZipCode: rateResponse.data.destinationZipCode,
-                insurance: {
-                    amountInsurance: rateResponse.data.insurance.amountInsurance,
-                    contentValue: rateResponse.data.insurance.contentValue,
-                },
-                rates: [],
-            },
+    public getGenericRateResponse(rateResponse: EnvioClickRateResponse, courier: Courier): Promise<GenericRateResponse> {
+        const genericRateResponse: GenericRateResponse = {
+            rates: [],
         };
-
-        const auxRate: RateInfo = {
-            deliveryTimeHours: '',
-            deliveryType: '',
-            serviceDesc: '',
+        const courierRate: CourierRate = {
+            name: '',
+            services: [],
+        };
+        const auxRate: RateCourierServiceType = {
+            rateId: 0,
             serviceName: '',
-            totalAmount: 0,
-            additionalCharges: [],
+            currency: '',
+            amount: 0,
+            estimatedDeliveryDate: '',
+            chargesDetail: [],
         };
 
         _.forEach(rateResponse.data.rates, (rate: Rate) => {
             auxRate.serviceName = rate.product;
-            auxRate.deliveryType = rate.deliveryType;
-            auxRate.totalAmount = rate.total;
-            auxRate.deliveryTimeHours = rate.deliveryDays.toString();
-            genericRateResponse.data.rates.push(auxRate);
+            auxRate.currency = rate.product;
+            auxRate.amount = rate.total;
+            auxRate.currency = undefined;
+            auxRate.chargesDetail = undefined;
+            auxRate.estimatedDeliveryDate = moment().add(Number(rate.deliveryDays), DAYS_STRING).toISOString();
+            courierRate.services.push(auxRate);
         });
+        courierRate.name = courier.name;
+        genericRateResponse.rates.push(courierRate);
 
         return Promise.resolve(genericRateResponse);
     }
