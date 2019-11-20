@@ -1,15 +1,15 @@
-import { Courier } from '../enums/courier-enum';
 import {
+    ArrayMaxSize,
     IsArray,
     IsDefined,
     IsEnum,
     IsString,
-    ValidateNested,
-    ArrayMaxSize
-} from 'class-validator';
+    ValidateNested
+    } from 'class-validator';
+import { CourierEnum } from '../enums/courier-enum';
+import { RateLocation } from './rate-location.class';
 import { RatePackage } from './rate-package.class';
 import { Type } from 'class-transformer';
-import { RateLocation } from './rate-location.class';
 
 export class GenericRateObject {
 
@@ -32,6 +32,6 @@ export class GenericRateObject {
     public recipientLocation: RateLocation;
 
     @IsArray()
-    @IsEnum(Courier, { each: true, message: `Must be a valid enum value valid options ${Object.keys(Courier)}` })
+    @IsEnum(CourierEnum, { each: true, message: `Must be a valid enum value valid options ${Object.keys(CourierEnum)}` })
     public preferredCouriers: string[];
 }

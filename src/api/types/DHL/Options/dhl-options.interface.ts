@@ -1,5 +1,6 @@
 export interface DHLOptions {
-    apiURL: string;
+    url: string;
     username: string;
     password: string;
+    account: string;
 }
