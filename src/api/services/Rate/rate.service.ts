@@ -1,17 +1,16 @@
-import {Courier} from '../../models/Courier/Courier';
-import {CourierId} from '../../types/enums/courier-id.enum';
-import {Credential} from '../../models/Credential/Credential';
-import {CredentialService} from '../Credential/credential.service';
-import {CredentialType} from '../../types/enums/credential-type.enum';
-import {FedexCredential} from '../../types/Credential/Fedex/FedexCredential/fedex-credential.inteface';
-import {FedexRateService} from '../FEDEX/RATE/fedex-rate.service';
-import {GenericBussinessLogicError} from '../../errors/Generic/generic-bussinessLogic.error';
-import {GenericRateObject} from '../../types/RateRequest/generic-rate-object.class';
-import {RateReplyDetail} from '../../types/FEDEX/Rate/RateReplyDetail/rate-reply-detail.interface';
-import {RateResponse} from '../../types/RateResponse/GenericRate/rate.response.interface';
-import * as _ from 'lodash';
-import {RedpackRateService} from '../../services/Redpack/redpack-rate.service';
-import {Service} from 'typedi';
+import { Courier } from '../../models/Courier/Courier';
+import { CourierId } from '../../types/enums/courier-id.enum';
+import { Credential } from '../../models/Credential/Credential';
+import { CredentialService } from '../Credential/credential.service';
+import { CredentialType } from '../../types/enums/credential-type.enum';
+import { FedexCredential } from '../../types/Credential/Fedex/FedexCredential/fedex-credential.inteface';
+import { FedexRateService } from '../FEDEX/RATE/fedex-rate.service';
+import { GenericBussinessLogicError } from '../../errors/Generic/generic-bussinessLogic.error';
+import { GenericRateObject } from '../../types/RateRequest/generic-rate-object.class';
+import { RateReplyDetail } from '../../types/FEDEX/Rate/RateReplyDetail/rate-reply-detail.interface';
+import { RedpackRateService } from '../../services/Redpack/redpack-rate.service';
+import { Service } from 'typedi';
+import { GenericRateResponse } from 'src/api/types/RateResponse/generic-rate-response.interface';
 
 @Service()
 export class RateService {
@@ -22,8 +21,22 @@ export class RateService {
     ) {
     }
 
-    public async rateShipment(genericRateObject: GenericRateObject): Promise<RateResponse> {
-        const rateResponse: RateResponse = await this.handleRedpackRequest(genericRateObject);
+    public async rateShipment(genericRateObject: GenericRateObject): Promise<GenericRateResponse> {
+        // TODO - Add prefered couriers functionality
+        // TODO - Get Courier from repository
+        const courier = new Courier();
+        courier.name = 'REDPACK';
+        courier.rateAction = 'rastreo';
+        courier.rateRequestUrl = 'https://ws.redpack.com.mx/RedpackAPI_WS/services/RedpackWS?wsdl';
+        const credential = new Credential();
+        credential.courier = courier;
+        credential.username = '';
+        credential.password = '';
+        credential.options = '{"PIN": "QA RQkCWF0cxuAmJL6L45p9AvdN7llAsaRz", "idUsuario": "1435"}';
+
+        let rateResponse: GenericRateResponse = undefined;
+
+        rateResponse = await this.handleRedpackRequest(genericRateObject, credential);
         return Promise.resolve(rateResponse);
     }
 
@@ -52,7 +65,7 @@ export class RateService {
         return '';
     }
 
-    public async handleRedpackRequest(genericRateObject: GenericRateObject): Promise<RateResponse> {
+    public async handleRedpackRequest(genericRateObject: GenericRateObject, credential: Credential): Promise<GenericRateResponse> {
         let coverageResponse = undefined;
         // TODO - Add prefered couriers functionality
         // TODO - Get Courier from repository
