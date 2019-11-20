@@ -13,17 +13,14 @@ export class CredentialRepository extends Repository<Credential> {
      * @returns {Promise<Credential>} Returns a credential required.
      */
     public async getCredentialByCourierIdTenantAndType(courierId: number, tenant: string, credentialType: CredentialType): Promise<Credential> {
-        try {
-            const credentialFound = await this.createQueryBuilder('credential')
-                .innerJoinAndSelect('credential.courier', 'courier')
-                .innerJoinAndSelect('courier.courierServices', 'courierService')
-                .where('credential.courier_id = :courierId', { courierId })
-                .andWhere('credential.tenant_id = :tenant', { tenant })
-                .andWhere('credential.type = :credentialType', { credentialType })
-                .getOne();
-            return credentialFound;
-        } catch (error) {
-            throw error;
-        }
+        const credentialFound = await this.createQueryBuilder('credential')
+            .innerJoinAndSelect('credential.courier', 'courier')
+            .innerJoinAndSelect('courier.courierServices', 'courierService')
+            .where('credential.courier_id = :courierId', { courierId })
+            .andWhere('credential.tenant_id = :tenant', { tenant })
+            .andWhere('credential.type = :credentialType', { credentialType })
+            .getOne();
+        return credentialFound;
+
     }
 }

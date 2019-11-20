@@ -44,13 +44,14 @@ export class FedexBaseService {
     protected readonly LABEL_STOCK_TYPE = 'PAPER_8.5X11_TOP_HALF_LABEL';
     protected readonly MINIMUM_AMOUNT = 1;
     protected readonly MINIMUM_ARRAY_SIZE = 1;
+    protected readonly MULTIPLE_PACKAGES_VALUE = 2;
     protected readonly PACKAGING_TYPE_CUSTOM = 'YOUR_PACKAGING';
     protected readonly PACKAGING_TYPE_ENVELOPE = 'FEDEX_ENVELOPE';
     protected readonly PICKED_UP_STATUS = 'PU';
     protected readonly RATE_ACTION = 'RATE';
     protected readonly RATE_REQUEST_TYPES = 'LIST';
     protected readonly SENDER_PAYMENT_TYPE = 'SENDER';
-    protected readonly SERVICE_DESCRIPTION_ENCODING = 'ASCII';
+    protected readonly SERVICE_DESCRIPTION_ENCODING = 'UTF-8';
     protected readonly SERVICE_DESCRIPTION_TYPE = 'MEDIUM';
     protected readonly SHIPMENT_ACTION = 'SHIPMENT';
     protected readonly SUCCESS = 'SUCCESS';
@@ -62,12 +63,13 @@ export class FedexBaseService {
     protected readonly XML_NAME_SPACE_TRACK = 'xmlns:v18="http://fedex.com/ws/track/v18"';
     protected readonly XML_NAME_SPACE_RATE = 'xmlns:v26="http://fedex.com/ws/rate/v26"';
     protected readonly XML_NAME_SPACE_SHIP = 'xmlns:v25="http://fedex.com/ws/ship/v25"';
-    protected readonly ENVELOPE_SOAP_HEADER = `<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" `
+    protected readonly ZERO_VALUE = 0;
+    protected readonly ENVELOPE_SOAP_HEADER_RATE = `<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" `
         + `xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" `
         + `xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" `
         + `xmlns:xsd="http://www.w3.org/2001/XMLSchema" `
-        + `xmlns="http://fedex.com/ws/rate/v26"> `
-        + `< SOAP-ENV:Body> `;
+        + `xmlns="http://fedex.com/ws/rate/v26">`
+        + `<SOAP-ENV:Body> `;
     protected readonly ENVELOPE_SOAP_HEADER_SHIP = '<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" '
         + 'xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" '
         + 'xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://fedex.com/ws/ship/v25">'
@@ -86,11 +88,6 @@ export class FedexBaseService {
      */
     public getFedexCredential(credentialDataByType: Credential): FedexCredential {
         return this.createFedexCredentialObject(credentialDataByType);
-    }
-
-    protected getEnvelopeSOAPHeader(namespace: string): string {
-        return this.ENVELOPE_SOAP_HEADER
-            + ` xmlns:version="${namespace}">`;
     }
     /**
      * @description create axios headers with specific soap action.
@@ -458,10 +455,7 @@ export class FedexBaseService {
                 accountNumber: fedexCredentialOptions.account,
                 meterNumber: fedexCredentialOptions.meterNumber,
             },
-            soapAction: {
-                action: fedexCredentialOptions.action,
-                version: fedexCredentialOptions.serviceVersion,
-            },
+            version: fedexCredentialOptions.serviceVersion,
         };
         return fedexCredential;
     }

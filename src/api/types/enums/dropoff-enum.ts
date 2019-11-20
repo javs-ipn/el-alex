@@ -1,5 +1,5 @@
 
 export enum DropOff {
-    'REGULAR_PICKUP',
-    'REQUEST_COURIER',
+    'REGULAR_PICKUP' = 'REGULAR_PICKUP',
+    'REQUEST_COURIER' = 'REQUEST_COURIER',
 }

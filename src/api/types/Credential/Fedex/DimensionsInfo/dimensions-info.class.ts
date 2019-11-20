@@ -1,4 +1,4 @@
-import { IsDefined, IsNumber, Min, IsPositive, Max } from 'class-validator';
+import { IsDefined, IsNumber, Min, IsPositive } from 'class-validator';
 import { DimensionsInfoOptions } from './dimensions-info-options.interface';
 
 export class DimensionsInfo {
@@ -6,7 +6,6 @@ export class DimensionsInfo {
     @IsDefined()
     @IsNumber()
     @IsPositive()
-    @Max(70)
     public weight: number;
 
     @IsDefined()

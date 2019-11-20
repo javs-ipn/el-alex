@@ -1,6 +1,6 @@
 export enum CredentialType {
-    RATE,
-    SHIP,
-    TRACK,
-    POD,
+    RATE = 'RATE',
+    SHIP = 'SHIP',
+    TRACK = 'TRACK',
+    POD = 'POD',
 }
