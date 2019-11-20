@@ -12,5 +12,5 @@ export interface Destination {
     state: string;
     crossStreet: string;
     reference: string;
-    zipCode: string
+    zipCode: string;
 }

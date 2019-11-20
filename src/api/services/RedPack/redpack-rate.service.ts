@@ -8,9 +8,7 @@ import { RedpackBaseService } from './redpack-base.service';
 import { Service } from 'typedi';
 import { Courier } from '../../models/Courier/Courier';
 import { ConfigOptions } from '../../types/RedPack/config-options.interface';
-import { RateResponse } from '../../types/RateResponse/GenericRate/rate.response.interface';
-import { CustomRedpackRateResponse } from '../../types/RateResponse/RedPack/custom-redpack-rate-response.interface';
-import { RateInfo } from '../../types/RateResponse/GenericRate/rate-info.interface';
+import { CustomRedpackRateResponse } from '../../types/RedPack/custom-redpack-rate-response.interface';
 
 @Service()
 export class RedpackRateService extends RedpackBaseService {
@@ -93,15 +91,15 @@ export class RedpackRateService extends RedpackBaseService {
      * @param {CourierService} courierService - Requested service to be matched
      * @returns {RateResponse} Rate Response object with the coverage needed
      */
-    public getGenericCoverageResponse(coverageResponse: CustomRedpackCoverageResponse, courier: Courier): RateResponse {
-        const rateResponse: RateResponse = {
+    public getGenericCoverageResponse(coverageResponse: CustomRedpackCoverageResponse, courier: Courier): any {
+        const rateResponse: any = {
             data: {
                 rates: [],
                 courierName: courier.name,
             },
         };
 
-        const auxRate: RateInfo = {
+        const auxRate: any = {
             additionalCharges: [],
             deliveryTimeHours: '',
             deliveryType: '',
