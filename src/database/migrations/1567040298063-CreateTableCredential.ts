@@ -51,9 +51,10 @@ export class CreateTableCredential1567040298063 implements MigrationInterface {
                 },
                 {
                     name: 'type',
-                    type: 'int',
+                    type: 'nvarchar',
+                    length: '20',
                     isNullable: false,
-                    comment: 'Credential`s type ALL | SHIP | TRACKING | POD | RATE',
+                    comment: 'Credential`s type  SHIP | TRACKING | POD | RATE',
                 },
                 {
                     name: 'username',

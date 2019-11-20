@@ -7,13 +7,13 @@ export class Rate {
     @PrimaryGeneratedColumn()
     public id: number;
 
-    @Column({ name: 'insurance', type: 'smallint', nullable: false, comment: 'Package insurance'})
+    @Column({ name: 'insurance', nullable: false, comment: 'Package insurance'})
     public insurance: boolean;
 
-    @Column({ name: 'customsValue', type: 'int', nullable: false, comment: 'Insurance amount'})
+    @Column({ name: 'customs_value', type: 'int', nullable: false, comment: 'Insurance amount'})
     public customsValue: number;
 
-    @Column({ name: 'internal_id', type: 'uniqueidentifier', nullable: false, comment: 'Identifier for the system', generated: true })
+    @Column({ name: 'internal_id', type: 'nvarchar', length: 'max', nullable: false, comment: 'Identifier for the system'})
     public internalId: string;
 
     @Column({ name: 'zipcode_origin', type: 'nvarchar', length: '255', nullable: false, comment: 'The zipcode origin for rate request' })
@@ -109,8 +109,8 @@ export class Rate {
     @Column({ name: 'total_price', type: 'int', nullable: true, comment: 'The total price for shipment' })
     public totalPrice: number;
 
-    @Column({ name: 'neto_price', type: 'int', nullable: true, comment: 'The neto price for shipment' })
-    public netoPrice: number;
+    @Column({ name: 'sub_total_price', type: 'int', nullable: true, comment: 'The neto price for shipment' })
+    public subTotalPrice: number;
 
     @Column({ name: 'additional_charges', type: 'nvarchar', length: 'max', nullable: true, comment: 'The json object for additional charges of all packages' })
     public additionalCharges: string;
@@ -118,24 +118,23 @@ export class Rate {
     @Column({ name: 'service_id', type: 'int', nullable: false, comment: 'The foreign key to courier_service' })
     public serviceId: number;
 
-    @Column({ name: 'extended_zone_shipment', type: 'smallint', nullable: false, comment: 'Indicates if a shipment is extended' })
+    @Column({ name: 'extended_zone_shipment', nullable: false, comment: 'Indicates if a shipment is extended' })
     public extendedZoneShipment: boolean;
 
-    @Column({ name: 'multiple_shipment', type: 'smallint', nullable: false, comment: 'Indicate if a shipment is multiple' })
+    @Column({ name: 'multiple_shipment', nullable: false, comment: 'Indicate if a shipment is multiple' })
     public multipleShipment: boolean;
 
     @Column({ name: 'tenant_id', type: 'nvarchar', length: '255', nullable: false, comment: 'The tenant for the client' })
     public tenantId: string;
 
-    @Column({ name: 'rated', type: 'smallint', nullable: false, comment: 'Indicates if a shipment was rated before' })
+    @Column({ name: 'rated', nullable: false, comment: 'Indicates if a shipment was rated before' })
     public rated: boolean;
 
-    @Column({ name: 'status', type: 'smallint', nullable: false, comment: 'Indicates if a rate was use' })
+    @Column({ name: 'status', nullable: false, comment: 'Indicates if a rate was use' })
     public status: boolean;
 
     @ManyToOne(type => CourierService, service => service.rates)
     @JoinColumn({ name: 'service_id' })
-    // !@todo Unset optional after changes
-    public service?: CourierService;
+    public service: CourierService;
 
 }

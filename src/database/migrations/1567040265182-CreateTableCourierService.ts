@@ -38,7 +38,7 @@ export class CreateTableCourierService1567040265182 implements MigrationInterfac
                 {
                     name: 'service_code',
                     type: 'nvarchar',
-                    length: '10',
+                    length: '50',
                     isNullable: false,
                     comment: 'Service code which is use to request to the courier',
                 },

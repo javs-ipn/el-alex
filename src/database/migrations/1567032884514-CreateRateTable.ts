@@ -17,8 +17,8 @@ export class CreateRateTable1567032884514 implements MigrationInterface {
                 },
                 {
                     name: 'internal_id',
-                    type: 'uniqueidentifier',
-                    isGenerated: true,
+                    type: 'nvarchar',
+                    length: 'max',
                     isNullable: false,
                     comment: 'Identifier for the system',
                 },
@@ -213,7 +213,7 @@ export class CreateRateTable1567032884514 implements MigrationInterface {
                     comment: 'The total height in the shipment',
                 },
                 {
-                    name: 'dimensions',
+                    name: 'dimensions_packages',
                     type: 'nvarchar',
                     length: 'max',
                     isNullable: false,
@@ -222,6 +222,7 @@ export class CreateRateTable1567032884514 implements MigrationInterface {
                 {
                     name: 'rate_date',
                     type: 'datetime',
+                    default: 'GETDATE()',
                     isNullable: false,
                     comment: 'The rate date for the shipment',
                 },
@@ -232,10 +233,10 @@ export class CreateRateTable1567032884514 implements MigrationInterface {
                     comment: 'The total price for shipment',
                 },
                 {
-                    name: 'neto_price',
+                    name: 'sub_total_price',
                     type: 'int',
                     isNullable: true,
-                    comment: 'The neto price for shipment',
+                    comment: 'The sub total price for shipment',
                 },
                 {
                     name: 'additional_charges',
@@ -279,6 +280,16 @@ export class CreateRateTable1567032884514 implements MigrationInterface {
                     type: 'smallint',
                     isNullable: false,
                     comment: 'Indicates if a rate was use',
+                },
+                {
+                    name: 'customs_value',
+                    type: 'decimal(18,2)',
+                    isNullable: true,
+                },
+                {
+                    name: 'insurance',
+                    type: 'smallint',
+                    isNullable: false,
                 },
             ],
         });
