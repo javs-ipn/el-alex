@@ -1,9 +1,10 @@
 import { ChargesDetail } from './charges-detail.interface';
 
-export  interface RateCourierServiceType {
+export interface RateCourierServiceType {
     rateId: number;
-    service: string;
+    serviceName: string;
     currency: string;
     amount: number;
+    estimatedDeliveryDate: string;
     chargesDetail: ChargesDetail[];
 }
