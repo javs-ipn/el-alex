@@ -1,5 +1,5 @@
-import { GenericBussinessLogicError } from '../../../../../waybill-delivery-service-api/src/api/errors/Generic/generic-bussinessLogic.error';
-import { FedexNotificationResponse } from '../../../../../waybill-delivery-service-api/src/api/types/FEDEX/Notification/fedex-notification-response.interface';
+// import { GenericBussinessLogicError } from '../../errors/Generic/generic-bussinessLogic.error';
+// import { FedexNotificationResponse } from '../../errors/Fedex/';
 
 export class HandlerErrorFedex {
     public static AUTH_FAILED = { code: '1000', description: 'Authentication Failed', translateConstant: 'FEDEX_AUTH_FAILED' };
@@ -13,15 +13,15 @@ export class HandlerErrorFedex {
      * @description
      * @param {FedexNotificationResponse}message
      */
-    public static handlerRequestError(message: FedexNotificationResponse): void {
-        if (this.API_NOT_AVAILABLE.code === message.Code) {
-            throw new GenericBussinessLogicError(this.API_NOT_AVAILABLE.translateConstant, [this.API_NOT_AVAILABLE]);
-        } else if (this.TRACKING_NUMBER_NOT_FOUND.code === message.Code) {
-            throw new GenericBussinessLogicError(this.TRACKING_NUMBER_NOT_FOUND.translateConstant, [this.TRACKING_NUMBER_NOT_FOUND]);
-        } else if (this.AUTH_FAILED.code === message.Code) {
-            throw new GenericBussinessLogicError(this.AUTH_FAILED.translateConstant, [this.AUTH_FAILED]);
-        } else {
-            throw new GenericBussinessLogicError(message.Message, [message]);
-        }
-    }
+    // public static handlerRequestError(message: FedexNotificationResponse): void {
+    //     if (this.API_NOT_AVAILABLE.code === message.Code) {
+    //         throw new GenericBussinessLogicError(this.API_NOT_AVAILABLE.translateConstant, [this.API_NOT_AVAILABLE]);
+    //     } else if (this.TRACKING_NUMBER_NOT_FOUND.code === message.Code) {
+    //         throw new GenericBussinessLogicError(this.TRACKING_NUMBER_NOT_FOUND.translateConstant, [this.TRACKING_NUMBER_NOT_FOUND]);
+    //     } else if (this.AUTH_FAILED.code === message.Code) {
+    //         throw new GenericBussinessLogicError(this.AUTH_FAILED.translateConstant, [this.AUTH_FAILED]);
+    //     } else {
+    //         throw new GenericBussinessLogicError(message.Message, [message]);
+    //     }
+    // }
 }

@@ -8,9 +8,9 @@ import { FedexRateService } from '../FEDEX/RATE/fedex-rate.service';
 import { GenericBussinessLogicError } from '../../errors/Generic/generic-bussinessLogic.error';
 import { GenericRateObject } from '../../types/RateRequest/generic-rate-object.class';
 import { RateReplyDetail } from '../../types/FEDEX/Rate/RateReplyDetail/rate-reply-detail.interface';
-import { RateResponse } from '../../types/RateResponse/GenericRate/rate.response.interface';
 import { RedpackRateService } from '../../services/Redpack/redpack-rate.service';
 import { Service } from 'typedi';
+import { GenericRateResponse } from 'src/api/types/RateResponse/generic-rate-response.interface';
 
 @Service()
 export class RateService {
@@ -21,7 +21,7 @@ export class RateService {
     ) {
     }
 
-    public async rateShipment(genericRateObject: GenericRateObject): Promise<RateResponse> {
+    public async rateShipment(genericRateObject: GenericRateObject): Promise<GenericRateResponse> {
         // TODO - Add prefered couriers functionality
         // TODO - Get Courier from repository
         const courier = new Courier();
@@ -34,7 +34,7 @@ export class RateService {
         credential.password = '';
         credential.options = '{"PIN": "QA RQkCWF0cxuAmJL6L45p9AvdN7llAsaRz", "idUsuario": "1435"}';
 
-        let rateResponse: RateResponse = undefined;
+        let rateResponse: GenericRateResponse = undefined;
 
         rateResponse = await this.handleRedpackRequest(genericRateObject, credential);
         return Promise.resolve(rateResponse);
@@ -44,7 +44,7 @@ export class RateService {
      * @description Handles rate fedex request.
      * @param genericRateObject
      */
-    private async handleFedexRequest(genericRateObject: GenericRateObject): Promise<any> {
+    public async handleFedexRequest(genericRateObject: GenericRateObject): Promise<any> {
         let credential: Credential;
         let courier: Courier;
         let fedexCredential: FedexCredential;
@@ -65,7 +65,7 @@ export class RateService {
         return '';
     }
 
-    private async handleRedpackRequest(genericRateObject: GenericRateObject, credential: Credential): Promise<RateResponse> {
+    public async handleRedpackRequest(genericRateObject: GenericRateObject, credential: Credential): Promise<GenericRateResponse> {
         let coverageResponse = undefined;
         try {
             const coverageRequestString = this.redpackCoverageService.generateCoverageXMLString(genericRateObject, credential);
