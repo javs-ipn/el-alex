@@ -19,6 +19,7 @@ import { Notification } from './../../../types/DHL/Rate/RateResponse/dhl-notific
 import { PackageUtilService } from './../../Package/package.util.service';
 import { Provider } from './../../../types/DHL/Rate/RateResponse/dhl-provider.interface';
 import { Rate } from './../../../models/Rate/rate.model';
+import { RATE } from '../../../../constants/rate.constants';
 import { RatePackage } from './../../../types/RateRequest/rate-package.class';
 import { RatePackageDimensions } from './../../../types/RateRequest/rate-package-dimensions.class';
 import { RateRequestObjectDHL } from '../../../types/DHL/Rate/RateRequest/dhl-rate-request-object.interface';
@@ -142,7 +143,7 @@ export class DHLRateService extends DHLBaseService {
             });
             if (foundService) {
                 const rateToBeSaved: Rate = new Rate();
-                rateToBeSaved.additionalCharges = this.getAdditionalChargesInJsonObject(serviceFound.Charges);
+                rateToBeSaved.chargesDetail = this.getAdditionalChargesInJsonObject(serviceFound.Charges);
                 rateToBeSaved.dimensionsPackages = PackageUtilService.getDimensionsJsonObjectOfAllPackages(genericRateRequest.packages);
                 rateToBeSaved.extendedZoneShipment = this.hasExtendedZoneCharge(serviceFound.Charges);
                 rateToBeSaved.multipleShipment = PackageUtilService.isMultipleShipment(genericRateRequest.packages);
@@ -154,6 +155,7 @@ export class DHLRateService extends DHLBaseService {
                 rateToBeSaved.contentDescription = firstPackage.description;
                 rateToBeSaved.countryCodeDestination = genericRateRequest.recipientLocation.countryISOCode;
                 rateToBeSaved.countryCodeOrigin = genericRateRequest.shipperLocation.countryISOCode;
+                rateToBeSaved.courierEstimatedDeliveryDate = RATE.NOT_AVAILABLE_DATA;
                 rateToBeSaved.deliveryType = firstPackage.shipmentRateDetail.dropOffType;
                 rateToBeSaved.packageType = firstPackage.shipmentRateDetail.contentType;
                 rateToBeSaved.serviceId = foundService.id;
@@ -166,7 +168,23 @@ export class DHLRateService extends DHLBaseService {
                 rateToBeSaved.totalWidth = totalDimensions.width;
                 rateToBeSaved.zipcodeDestination = genericRateRequest.recipientLocation.zipcode;
                 rateToBeSaved.zipcodeOrigin = genericRateRequest.shipperLocation.zipcode;
+                rateToBeSaved.neighborhoodOrigin = RATE.NOT_AVAILABLE_DATA;
+                rateToBeSaved.neighborhoodDestination = RATE.NOT_AVAILABLE_DATA;
+                rateToBeSaved.shipperStreetLines1 = RATE.NOT_AVAILABLE_DATA;
+                rateToBeSaved.shipperReference = RATE.NOT_AVAILABLE_DATA;
+                rateToBeSaved.recipientStreetLines1 = RATE.NOT_AVAILABLE_DATA;
+                rateToBeSaved.recipientReference = RATE.NOT_AVAILABLE_DATA;
+                rateToBeSaved.contactNameOrigin = RATE.NOT_AVAILABLE_DATA;
+                rateToBeSaved.contactNameDestination = RATE.NOT_AVAILABLE_DATA;
+                rateToBeSaved.corporateNameOrigin = RATE.NOT_AVAILABLE_DATA;
+                rateToBeSaved.corporateNameDestination = RATE.NOT_AVAILABLE_DATA;
+                rateToBeSaved.phoneNumberOrigin = RATE.NOT_AVAILABLE_DATA;
+                rateToBeSaved.phoneNumberDestination = RATE.NOT_AVAILABLE_DATA;
+                rateToBeSaved.emailOrigin = RATE.NOT_AVAILABLE_DATA;
+                rateToBeSaved.emailDestination = RATE.NOT_AVAILABLE_DATA;
                 if (rateToBeSaved.deliveryType === DropOff.REQUEST_COURIER) {
+                    rateToBeSaved.pickupDate = new Date(serviceFound.DeliveryTime);
+                } else {
                     rateToBeSaved.pickupDate = new Date(serviceFound.DeliveryTime);
                 }
                 if (rateToBeSaved.insurance) {
