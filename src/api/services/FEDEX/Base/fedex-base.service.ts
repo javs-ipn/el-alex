@@ -55,6 +55,7 @@ export class FedexBaseService {
     protected readonly SERVICE_DESCRIPTION_TYPE = 'MEDIUM';
     protected readonly SHIPMENT_ACTION = 'SHIPMENT';
     protected readonly SUCCESS = 'SUCCESS';
+    protected readonly FREIGHT_CHARGE = 'TotalNetFreight';
     protected readonly TENANT_ID = 54321;
     protected readonly TRACKING_TYPE = 'TRACKING_NUMBER_OR_DOORTAG';
     protected readonly WARNING = 'WARNING';

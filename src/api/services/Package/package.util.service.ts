@@ -57,7 +57,6 @@ export class PackageUtilService {
         }
         return isMultiple;
     }
-
     /**
      * @description Gets the generic Rate response from the saved rates
      * @param {string} courier - Related courier name
@@ -75,15 +74,14 @@ export class PackageUtilService {
         _.forEach(rates, (rate: Rate) => {
             const courierServiceType: RateCourierServiceType = {
                 amount: rate.totalPrice,
-                chargesDetail: JSON.parse(rate.additionalCharges),
+                chargesDetail: JSON.parse(rate.chargesDetail),
                 currency: Currency.MXN,
-                estimatedDeliveryDate: '',
+                estimatedDeliveryDate: rate.courierEstimatedDeliveryDate,
                 rateId: rate.id,
-                serviceName: '',
+                serviceName: rate.serviceName,
             };
             genericDHLRate.services.push(courierServiceType);
         });
-
         genericResponse.rates.push(genericDHLRate);
         return genericResponse;
     }

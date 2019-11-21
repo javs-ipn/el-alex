@@ -112,8 +112,8 @@ export class Rate {
     @Column({ name: 'sub_total_price', type: 'int', nullable: true, comment: 'The neto price for shipment' })
     public subTotalPrice: number;
 
-    @Column({ name: 'additional_charges', type: 'nvarchar', length: 'max', nullable: true, comment: 'The json object for additional charges of all packages' })
-    public additionalCharges: string;
+    @Column({ name: 'charges_detail', type: 'nvarchar', length: 'max', nullable: true, comment: 'The json object for additional charges of all packages' })
+    public chargesDetail: string;
 
     @Column({ name: 'service_id', type: 'int', nullable: false, comment: 'The foreign key to courier_service' })
     public serviceId: number;
@@ -132,6 +132,12 @@ export class Rate {
 
     @Column({ name: 'status', nullable: false, comment: 'Indicates if a rate was use' })
     public status: boolean;
+
+    @Column({ name: 'service_name', type: 'nvarchar', length: '255', nullable: false})
+    public serviceName: string;
+
+    @Column({ name: 'courier_estimated_delivery_date', type: 'nvarchar', length: '255', nullable: false})
+    public courierEstimatedDeliveryDate: string;
 
     @ManyToOne(type => CourierService, service => service.rates)
     @JoinColumn({ name: 'service_id' })

@@ -1,4 +1,3 @@
-import * as _ from 'lodash';
 import { DHLCredentialOptions } from './../../../types/Credential/DHL/dhl-credential-options';
 import { Credential } from '../../../models/Credential/Credential';
 import { DHL_CONSTANTS } from '../../../types/DHL/Constants/dhl-constants';

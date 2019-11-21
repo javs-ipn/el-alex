@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import axios, { AxiosPromise, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { DHL_CONSTANTS } from 'src/api/types/DHL/Constants/dhl-constants';
+import { DHL_CONSTANTS } from '../../../types/DHL/Constants/dhl-constants';
 import { DHLOptions } from './../../../types/DHL/Options/dhl-options.interface';
 import { GenericBussinessLogicError } from './../../../errors/Generic/generic-bussinessLogic.error';
 import { HashService } from './../../Hash/hash-methods.service';

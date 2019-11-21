@@ -1,4 +1,3 @@
-import * as _ from 'lodash';
 import { Courier } from './../../models/Courier/Courier';
 import { CourierEnum } from './../../types/enums/courier-enum';
 import { CourierId } from './../../types/enums/courier-id.enum';
@@ -74,7 +73,7 @@ export class RateService {
             ratesFilterByExistingDatabase = this.fedexRateService.filterExistingDatabaseFedexServices(fedexCourierServices, rateReplyDetails);
             rates = this.fedexRateService.generateRateObjects(ratesFilterByExistingDatabase, genericRateObject, fedexCourierServices);
             const savedRates = await this.rateRepository.saveRates(rates);
-            genericRateResponse = this.fedexRateService.getGenericRateResponse(savedRates);
+            genericRateResponse = PackageUtilService.getGenericRateResponse(CourierEnum.FEDEX, savedRates);
         } catch (error) {
             throw new GenericBussinessLogicError(error.message, error);
         }
