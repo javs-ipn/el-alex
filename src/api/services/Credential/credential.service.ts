@@ -35,7 +35,7 @@ export class CredentialService {
                     `Not found credential with courierId: ${courierId} tenant: ${tenant} and credential type: ${credentialType} .`);
             }
         } catch (error) {
-            throw error;
+            throw new GenericBussinessLogicError(error.message, error);
         }
         return credentialFound;
     }

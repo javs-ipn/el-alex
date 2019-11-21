@@ -1,7 +1,7 @@
+import { GenericRateResponse } from './../../types/RateResponse/generic-rate-response.interface';
 import { Body, JsonController, Post } from 'routing-controllers';
 import { GenericRateObject } from './../../types/RateRequest/generic-rate-object.class';
 import { RateService } from './../../services/Rate/rate.service';
-import { GenericRateResponse } from 'src/api/types/RateResponse/generic-rate-response.interface';
 @JsonController('/rate')
 export class RateController {
 

@@ -2,7 +2,6 @@ import { SOAPServiceVersion } from '../SoapServiceVersion/soap-service-version.i
 
 export interface FedexCredentialOptions {
     account: string;
-    action: string;
     meterNumber: string;
     serviceVersion: SOAPServiceVersion;
 }

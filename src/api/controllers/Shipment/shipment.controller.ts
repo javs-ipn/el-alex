@@ -1,13 +1,11 @@
-import { JsonController, Post } from 'routing-controllers';
-import { ShipmentService } from '../../services/Shipment/shipment.service';
-import { ShipmentResponse } from '../../types/ShipmentResponse/generic-shipment-response.interface';
-@JsonController('/shipment')
-export class RateController {
+import { Body, JsonController, Post } from 'routing-controllers';
+import { GenericShipmentRequest } from './../../types/ShipmentRequest/generic-shipment-request.class';
 
-    constructor(private shipmentService: ShipmentService) { }
+@JsonController('/shipment')
+export class ShipmentController {
 
     @Post('/')
-    public async shipment(idRate: number): Promise<ShipmentResponse> {
-        return this.shipmentService.shipmentRequest(idRate);
+    public shipment(@Body() genericShipmentObject: GenericShipmentRequest): Promise<GenericShipmentRequest> {
+        return Promise.resolve(genericShipmentObject);
     }
 }

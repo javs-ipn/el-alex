@@ -1,86 +1,88 @@
 import * as _ from 'lodash';
-import { Courier } from '../../models/Courier/Courier';
-import { CourierId } from '../../types/enums/courier-id.enum';
-import { Credential } from '../../models/Credential/Credential';
-import { CredentialService } from '../Credential/credential.service';
-import { CredentialType } from '../../types/enums/credential-type.enum';
-import { FedexCredential } from '../../types/Credential/Fedex/FedexCredential/fedex-credential.inteface';
-import { FedexRateService } from '../FEDEX/RATE/fedex-rate.service';
-import { GenericBussinessLogicError } from '../../errors/Generic/generic-bussinessLogic.error';
-import { GenericRateObject } from '../../types/RateRequest/generic-rate-object.class';
-import { RateReplyDetail } from '../../types/FEDEX/Rate/RateReplyDetail/rate-reply-detail.interface';
-import { RedpackRateService } from '../../services/Redpack/redpack-rate.service';
+import { Courier } from './../../models/Courier/Courier';
+import { CourierEnum } from './../../types/enums/courier-enum';
+import { CourierId } from './../../types/enums/courier-id.enum';
+import { CourierService } from './../../models/CourierService/CourierService';
+import { Credential } from './../../models/Credential/Credential';
+import { CredentialService } from './../Credential/credential.service';
+import { CredentialType } from './../../types/enums/credential-type.enum';
+import { DHLOptions } from './../../types/DHL/Options/dhl-options.interface';
+import { DHLRateService } from './../DHL/RateRequest/rate-request-dhl.service';
+import { FedexCredential } from './../../types/Credential/Fedex/FedexCredential/fedex-credential.inteface';
+import { FedexRateService } from './../FEDEX/Rate/fedex-rate.service';
+import { GenericBussinessLogicError } from './../../errors/Generic/generic-bussinessLogic.error';
+import { GenericRateObject } from './../../types/RateRequest/generic-rate-object.class';
+import { GenericRateResponse } from './../../types/RateResponse/generic-rate-response.interface';
+import { OrmRepository } from 'typeorm-typedi-extensions';
+import { PackageUtilService } from './../Package/package.util.service';
+import { Rate } from './../../models/Rate/rate.model';
+import { RateReplyDetail } from './../../types/FEDEX/Rate/RateReplyDetail/rate-reply-detail.interface';
+import { RateRepository } from './../../repositories/Rate/rate.repository';
 import { Service } from 'typedi';
-import { GenericRateResponse } from 'src/api/types/RateResponse/generic-rate-response.interface';
-import { EnvioClickRateRequest } from 'src/api/types/EnvioClick/RateRequest/envioclick-rate-request.interface';
 import { EnvioClickRateResponse } from 'src/api/types/EnvioClick/RateResponse/envioclick-rate-response.interface';
+import { EnvioClickRateRequest } from 'src/api/types/EnvioClick/RateRequest/envioclick-rate-request.interface';
 import { EnvioClickRateService } from '../EnvioClick/rate-request-envioclick.service';
-
 @Service()
 export class RateService {
+
     constructor(
+        @OrmRepository() private rateRepository: RateRepository,
         private credentialService: CredentialService,
-        private redpackCoverageService: RedpackRateService,
         private fedexRateService: FedexRateService,
-        private rateEnvioClickService: EnvioClickRateService
+        private dhlRateService: DHLRateService,
+        private envioClickRateService: EnvioClickRateService
     ) {
     }
-
-    public async rateShipment(genericRateObject: GenericRateObject): Promise<GenericRateResponse> {
-        let rateResponse: GenericRateResponse = undefined;
-
-        rateResponse = await this.handleEnvioClickRequest(genericRateObject);
-        return Promise.resolve(rateResponse);
-    }
-
     /**
-     * @description Handles rate fedex request.
-     * @param genericRateObject
+     * @description Handles the  dhl rate request
+     * @param {GenericRateObject} genericRateObject Generic rate object
      */
-    public async handleFedexRequest(genericRateObject: GenericRateObject): Promise<any> {
+    public async handleDHLRequest(genericRateObject: GenericRateObject): Promise<GenericRateResponse> {
         let credential: Credential;
         let courier: Courier;
-        let fedexCredential: FedexCredential;
-        let rateReplyDetail: RateReplyDetail[];
-        let xmlDataRequest: string;
+        let dhlOptions: DHLOptions;
         try {
-            credential = await this.credentialService
-                .getCredentialByCourierIdTenantAndType(CourierId.FEDEX, genericRateObject.tenantId, CredentialType.RATE);
-            fedexCredential = this.fedexRateService.getFedexCredential(credential);
+            credential = await this.credentialService.getCredentialByCourierIdTenantAndType(
+                CourierId.DHL, genericRateObject.tenantId, CredentialType.RATE);
             courier = credential.courier;
-            xmlDataRequest = this.fedexRateService.generateAvailableServicesRateXML(fedexCredential, genericRateObject);
-            rateReplyDetail = await this.fedexRateService.requestRateAvailableServices(xmlDataRequest, courier.rateRequestUrl, courier.rateAction);
-            console.log(rateReplyDetail);
-            // TODO generar generico rate
+            dhlOptions = this.dhlRateService.getDHLOptions(courier.rateRequestUrl, credential);
+            const dhlRateRequestObject = this.dhlRateService.generateRateObject(genericRateObject, dhlOptions);
+            const rateResponse = await this.dhlRateService.rateRequest(dhlRateRequestObject, dhlOptions);
+            const ratesToBeSaved = this.dhlRateService.getRatesToBeSaved(courier, genericRateObject, rateResponse);
+            const savedRates = await this.rateRepository.saveRates(ratesToBeSaved);
+            const genericRateResponse = PackageUtilService.getGenericRateResponse(CourierEnum.DHL, savedRates);
+            return genericRateResponse;
         } catch (error) {
             throw new GenericBussinessLogicError(error.message, error);
         }
-        return '';
     }
 
-    public async handleRedpackRequest(genericRateObject: GenericRateObject): Promise<GenericRateResponse> {
-        let credential: Credential;
-        let coverageResponse = undefined;
-        // TODO - Add prefered couriers functionality
-        // TODO - Get Courier from repository
-        // const courier = new Courier();
-        // courier.name = 'REDPACK';
-        // courier.rateAction = 'rastreo';
-        // courier.rateRequestUrl = 'https://ws.redpack.com.mx/RedpackAPI_WS/services/RedpackWS?wsdl';
-        // credential.courier = courier;
-        // credential.username = '';
-        // credential.password = '';
-        // credential.options = '{"PIN": "QA RQkCWF0cxuAmJL6L45p9AvdN7llAsaRz", "idUsuario": "1435"}';
+    public async handleFedexRequest(genericRateObject: GenericRateObject): Promise<GenericRateResponse> {
+        let clientCredential: Credential;
+        let fedexCourier: Courier;
+        let fedexCourierServices: CourierService[];
+        let fedexCredential: FedexCredential;
+        let genericRateResponse: GenericRateResponse;
+        let rateReplyDetails: RateReplyDetail[];
+        let rates: Rate[];
+        let ratesFilterByExistingDatabase: RateReplyDetail[];
+        let xmlDataRequest: string;
         try {
-            credential = await this.credentialService
-                .getCredentialByCourierIdTenantAndType(CourierId.ENVIO_CLICK, genericRateObject.tenantId, CredentialType.RATE);
-            const coverageRequestString = this.redpackCoverageService.generateCoverageXMLString(genericRateObject, credential);
-            const foundRates = await this.redpackCoverageService.requestCoverageService(coverageRequestString, credential.courier);
-            coverageResponse = this.redpackCoverageService.getGenericCoverageResponse((_.first(foundRates)), credential.courier);
-            return Promise.resolve(coverageResponse);
+            clientCredential = await this.credentialService
+                .getCredentialByCourierIdTenantAndType(CourierId.FEDEX, genericRateObject.tenantId, CredentialType.RATE);
+            fedexCredential = this.fedexRateService.getFedexCredential(clientCredential);
+            fedexCourier = clientCredential.courier;
+            fedexCourierServices = fedexCourier.courierServices;
+            xmlDataRequest = this.fedexRateService.generateAvailableServicesRateXML(fedexCredential, genericRateObject);
+            rateReplyDetails = await this.fedexRateService.rateAvailableServicesRequest(xmlDataRequest, fedexCourier.rateRequestUrl, fedexCourier.rateAction);
+            ratesFilterByExistingDatabase = this.fedexRateService.filterExistingDatabaseFedexServices(fedexCourierServices, rateReplyDetails);
+            rates = this.fedexRateService.generateRateObjects(ratesFilterByExistingDatabase, genericRateObject, fedexCourierServices);
+            const savedRates = await this.rateRepository.saveRates(rates);
+            genericRateResponse = this.fedexRateService.getGenericRateResponse(savedRates);
         } catch (error) {
-            throw new GenericBussinessLogicError(error);
+            throw new GenericBussinessLogicError(error.message, error);
         }
+        return genericRateResponse;
     }
 
     /**
@@ -93,9 +95,9 @@ export class RateService {
         try {
             credential = await this.credentialService
                 .getCredentialByCourierIdTenantAndType(CourierId.ENVIO_CLICK, genericRate.tenantId, CredentialType.RATE);
-            const rateRequest: EnvioClickRateRequest = await this.rateEnvioClickService.generateObject(genericRate);
-            const rateResponse: EnvioClickRateResponse = await this.rateEnvioClickService.rateRequest(rateRequest, credential);
-            const genericRateResponse: any = await this.rateEnvioClickService.getGenericRateResponse(rateResponse, credential.courier);
+            const rateRequest: EnvioClickRateRequest = await this.envioClickRateService.generateObject(genericRate);
+            const rateResponse: EnvioClickRateResponse = await this.envioClickRateService.rateRequest(rateRequest, credential);
+            const genericRateResponse: any = await this.envioClickRateService.getGenericRateResponse(rateResponse, credential.courier);
             return Promise.resolve(genericRateResponse);
         } catch (error) {
             throw new GenericBussinessLogicError(error);
