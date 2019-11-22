@@ -14,8 +14,8 @@ export class CredentialRepository extends Repository<Credential> {
      */
     public async getCredentialByCourierIdTenantAndType(courierId: number, tenant: string, credentialType: CredentialType): Promise<Credential> {
         const credentialFound = await this.createQueryBuilder('credential')
-            .innerJoinAndSelect('credential.courier', 'courier')
-            .innerJoinAndSelect('courier.courierServices', 'courierService')
+            .leftJoinAndSelect('credential.courier', 'courier')
+            .leftJoinAndSelect('courier.courierServices', 'courierService')
             .where('credential.courier_id = :courierId', { courierId })
             .andWhere('credential.tenant_id = :tenant', { tenant })
             .andWhere('credential.type = :credentialType', { credentialType })

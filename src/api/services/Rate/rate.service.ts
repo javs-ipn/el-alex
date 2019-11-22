@@ -32,6 +32,13 @@ export class RateService {
         private envioClickRateService: EnvioClickRateService
     ) {
     }
+
+    public async rateShipment(genericObject: GenericRateObject): Promise<GenericRateResponse> {
+        // TODO - Add prefers functionality
+        const rateResponse: GenericRateResponse = await this.handleEnvioClickRequest(genericObject);
+        return Promise.resolve(rateResponse);
+    }
+
     /**
      * @description Handles the  dhl rate request
      * @param {GenericRateObject} genericRateObject Generic rate object

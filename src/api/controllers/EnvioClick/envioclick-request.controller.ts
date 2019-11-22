@@ -3,9 +3,9 @@ import {Courier} from '../../models/Courier/Courier';
 import {Credential} from '../../models/Credential/Credential';
 import {GenericTrakingObject} from '../../types/RateRequest/generic-traking-object.class';
 import {GenericRateObject} from '../../types/RateRequest/generic-rate-object.class';
-import {Rate} from '../../models/Rate/rate.model';
+// import {Rate} from '../../models/Rate/rate.model';
 import {MultiRateEnvioClickService} from '../../services/EnvioClick/rate-multi-packages-envioclick.service';
-import {ShipmentRequestEnvioClickService} from '../../services/EnvioClick/shipment-request-envioclick.service';
+// import {ShipmentRequestEnvioClickService} from '../../services/EnvioClick/shipment-request-envioclick.service';
 import {TrackingRequestEnvioClickService} from '../../services/EnvioClick/tracking-request-envioclick.service';
 import {TrackingMultiEnvioClickService} from '../../services/EnvioClick/tracking-multi-packages-envioclick.service';
 import * as _ from 'lodash';
@@ -19,7 +19,6 @@ const TEMPAPIKEY = '3179f152-803b-48dd-bac9-570d1043995a';
 @JsonController('/envioclick')
 export class EnvioClickRequestController {
     constructor(
-        private shipmentEnvioClickService: ShipmentRequestEnvioClickService,
         private trackingEnvioClickService: TrackingRequestEnvioClickService,
         private trackingMultiEnvioClickService: TrackingMultiEnvioClickService,
         private multiRatenvioClickService: MultiRateEnvioClickService) {
@@ -96,67 +95,70 @@ export class EnvioClickRequestController {
     /**
      * @description ...
      */
-    @Post('/shipment')
-    public async shipment(): Promise<any> {
-        const credential = new Credential();
-        const courier = new Courier();
-        // TODO - Do rate repository functionality
-        const rate: Rate = {
-            id: 1,
-            internalId: '1',
-            insurance: true,
-            // tslint:disable-next-line:max-line-length
-            dimensionsPackages: '{"description": "Company name", "contentValue": 123, "weight":10, "length":10, "height":10, "width":10}',
-            cityOrigin: 'MX',
-            cityDestination: 'MX',
-            additionalCharges: '[{}]',
-            contactNameOrigin: 'Aejandro Vázquez',
-            contactNameDestination: 'Alejandro Vázquez',
-            corporateNameOrigin: 'MEDISTIK',
-            corporateNameDestination: 'MEDISTIK',
-            countryCodeOrigin: 'MX',
-            countryCodeDestination: 'MX',
-            deliveryType: 'REGULAR_PICKUP',
-            emailOrigin: 'javs.ipn@outlook.com',
-            emailDestination: 'alejandro.vazquez@netlogistik.com',
-            extendedZoneShipment: false,
-            multipleShipment: false,
-            neighborhoodOrigin: 'Providencia',
-            neighborhoodDestination: 'Providencia',
-            netoPrice: 200,
-            packageType: 'NON_DOCUMENTS',
-            phoneNumberOrigin: '5538778187',
-            phoneNumberDestination: '5538778187',
-            pickupDate: new Date('October 25 2019 12:30'),
-            rateDate: new Date('October 25 2019 12:30'),
-            rated: true,
-            serviceId: 1,
-            status: false,
-            recipientStreetLines1: 'Calle Edo de Tamaulipas',
-            shipperStreetLines1: 'Calle Edo de Tamaulipas',
-            tenantId: '54321',
-            totalHeight: 223,
-            totalLength: 212,
-            totalWeight: 213,
-            totalPrice: 212,
-            totalWidth: 122,
-            zipcodeOrigin: '54948',
-            zipcodeDestination: '45167',
-            contentDescription: '',
-            recipientReference: 'Hay una paletería',
-            shipperReference: 'Hay una paletería',
-            customsValue: 200,
-        };
+    // @Post('/shipment')
+    // public async shipment(): Promise<any> {
+    //     const credential = new Credential();
+    //     const courier = new Courier();
+    //     // TODO - Do rate repository functionality
+    //     const rate: Rate = {
+    //         id: 1,
+    //         internalId: '1',
+    //         insurance: true,
+    //         // tslint:disable-next-line:max-line-length
+    //         dimensionsPackages: '{"description": "Company name", "contentValue": 123, "weight":10, "length":10, "height":10, "width":10}',
+    //         cityOrigin: 'MX',
+    //         cityDestination: 'MX',
+    //         additionalCharges: '[{}]',
+    //         contactNameOrigin: 'Aejandro Vázquez',
+    //         contactNameDestination: 'Alejandro Vázquez',
+    //         corporateNameOrigin: 'MEDISTIK',
+    //         corporateNameDestination: 'MEDISTIK',
+    //         countryCodeOrigin: 'MX',
+    //         countryCodeDestination: 'MX',
+    //         deliveryType: 'REGULAR_PICKUP',
+    //         emailOrigin: 'javs.ipn@outlook.com',
+    //         emailDestination: 'alejandro.vazquez@netlogistik.com',
+    //         extendedZoneShipment: false,
+    //         multipleShipment: false,
+    //         neighborhoodOrigin: 'Providencia',
+    //         neighborhoodDestination: 'Providencia',
+    //         packageType: 'NON_DOCUMENTS',
+    //         phoneNumberOrigin: '5538778187',
+    //         phoneNumberDestination: '5538778187',
+    //         pickupDate: new Date('October 25 2019 12:30'),
+    //         rateDate: new Date('October 25 2019 12:30'),
+    //         rated: true,
+    //         serviceId: 1,
+    //         status: false,
+    //         recipientStreetLines1: 'Calle Edo de Tamaulipas',
+    //         shipperStreetLines1: 'Calle Edo de Tamaulipas',
+    //         tenantId: '54321',
+    //         totalHeight: 223,
+    //         totalLength: 212,
+    //         totalWeight: 213,
+    //         totalPrice: 212,
+    //         totalWidth: 122,
+    //         zipcodeOrigin: '54948',
+    //         zipcodeDestination: '45167',
+    //         contentDescription: '',
+    //         recipientReference: 'Hay una paletería',
+    //         shipperReference: 'Hay una paletería',
+    //         customsValue: 200,
+    //         service: {
 
-        courier.rateAction = 'ShipmentRequest';
-        courier.shipmentRequestUrl = 'https://api.envioclickpro.com/api/v1/sandbox_shipment/request';
-        credential.courier = courier;
-        credential.username = TEMPUSER;
-        credential.password = TEMPAPIKEY;
+    //         },
+    //         subTotalPrice: 200,
+    //     };
 
-        // const response: ShipmentResponse = await this.handleEnvioClickRequest(rate, credential, courier);
+    //     courier.rateAction = 'ShipmentRequest';
+    //     courier.shipmentRequestUrl = 'https://api.envioclickpro.com/api/v1/sandbox_shipment/request';
+    //     credential.courier = courier;
+    //     credential.username = TEMPUSER;
+    //     credential.password = TEMPAPIKEY;
 
-        const envioclickShipment = await this.shipmentEnvioClickService.generateObject(rate);
-        return Promise.resolve(this.shipmentEnvioClickService.shipmentRequest(envioclickShipment, credential));
-    }
+    //     // const response: ShipmentResponse = await this.handleEnvioClickRequest(rate, credential, courier);
+
+    //     const envioclickShipment = await this.shipmentEnvioClickService.generateObject(rate);
+    //     return Promise.resolve(this.shipmentEnvioClickService.shipmentRequest(envioclickShipment, credential));
+    // }
 }

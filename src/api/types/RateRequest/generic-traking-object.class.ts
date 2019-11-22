@@ -1,4 +1,4 @@
-import { Courier } from '../enums/courier-enum';
+import { CourierEnum as Courier } from '../enums/courier-enum';
 import {
     IsArray,
     IsDefined,
