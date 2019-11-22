@@ -1,6 +1,5 @@
 import * as _ from 'lodash';
 import axios, { AxiosPromise, AxiosRequestConfig, AxiosResponse } from 'axios';
-// import { HashService } from '../Hash/hash-methods.service';
 import { Logger, LoggerInterface } from '../../../decorators/Logger';
 import { Service } from 'typedi';
 import { Credential } from '../../models/Credential/Credential';
