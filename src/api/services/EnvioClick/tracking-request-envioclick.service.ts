@@ -15,8 +15,8 @@ export class TrackingRequestEnvioClickService {
     }
 
     /**
-     * @description Calls for DHL api shipment request chaining promises and resolves them
-     * @param {ShipmentRequest} shipmentRequest Shipment Request object needed by DHL
+     * @description Calls for EnvioClick api tracking request chaining promises and resolves them
+     * @param {TrackingRequestEnvioClick} trackingRequest Tracking Request object needed by EnvioClick
      * @param {Credential} credential Object containing the url, username and password
      */
     public async trackingRequest(trackingRequest: TrackingRequestEnvioClick, credential: Credential): Promise<any> {
