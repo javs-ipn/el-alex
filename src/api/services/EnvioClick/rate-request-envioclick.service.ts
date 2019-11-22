@@ -7,13 +7,18 @@ import { Credential } from '../../models/Credential/Credential';
 import { EnvioClickRateRequest } from '../../types/EnvioClick/RateRequest/envioclick-rate-request.interface';
 import { EnvioClickRateResponse } from '../../types/EnvioClick/RateResponse/envioclick-rate-response.interface';
 import { Courier } from '../../models/Courier/Courier';
-import { Rate } from '../../types/EnvioClick/RateResponse/rate.interface';
 import { GenericRateResponse } from 'src/api/types/RateResponse/generic-rate-response.interface';
 import { CourierRate } from 'src/api/types/RateResponse/courier-rate.interface';
 import { RateCourierServiceType } from 'src/api/types/RateResponse/rate-courier-service-type.interface';
 import * as moment from 'moment';
 import { HandlerErrorEnvioClick } from '../../errors/EnvioClick/handle-error-envioclick.error.class';
 import { EnvioClickErrorResponse } from '../../types/EnvioClick/RateResponse/ErrorResponse/error-response-envioclick.interface';
+import { Rate } from '../../models/Rate/rate.model';
+import { Rate as EnvioClickRate } from '../../types/EnvioClick/RateResponse/rate.interface';
+import { RATE } from '../../../constants/rate.constants';
+import { DropOff } from '../../types/enums/dropoff-enum';
+import { PackageUtilService } from '../Package/package.util.service';
+import { CourierService } from 'src/api/models/CourierService/CourierService';
 
 const DAYS_STRING = 'days';
 @Service()
@@ -40,7 +45,7 @@ export class EnvioClickRateService {
         try {
             const axiosRequestConfig = this.getAxiosRequestConfig(credential);
             const rateReponseEnvioClickApi = await axios.post(credential.courier.rateRequestUrl, rateRequest, axiosRequestConfig);
-            const rateResponse: EnvioClickRateResponse =  rateReponseEnvioClickApi.data;
+            const rateResponse: EnvioClickRateResponse = rateReponseEnvioClickApi.data;
             return Promise.resolve(rateResponse);
         } catch (error) {
             this.handleEnvioClickError(error.response.data);
@@ -105,7 +110,7 @@ export class EnvioClickRateService {
             chargesDetail: [],
         };
 
-        _.forEach(rateResponse.data.rates, (rate: Rate) => {
+        _.forEach(rateResponse.data.rates, (rate: EnvioClickRate) => {
             auxRate.serviceName = rate.product;
             auxRate.currency = rate.product;
             auxRate.amount = rate.total;
@@ -146,5 +151,65 @@ export class EnvioClickRateService {
         if (EnvioClickRateService.ERROR_STATUS === errorData.status) {
             HandlerErrorEnvioClick.handlerRequestError(errorResponse);
         }
+    }
+
+    public getRatesToBeSaved(genericRateObject: GenericRateObject, courierServices: CourierService[], rateResponse: EnvioClickRateResponse): Rate[] {
+        const ratesToSave: Rate[] = [];
+        const ratesResponse = rateResponse.data.rates;
+        const firstPackage = _.first(genericRateObject.packages);
+        const rateToSave: Rate = new Rate();
+        if (_.isArray(ratesResponse)) {
+            const totalDimensions = PackageUtilService.getTotalDimensions(genericRateObject.packages);
+            _.forEach(rateResponse.data.rates, (envioClickRate: EnvioClickRate) => {
+                rateToSave.insurance = true;
+                rateToSave.customsValue = rateResponse.data.insurance.amountInsurance;
+                rateToSave.zipcodeOrigin = rateResponse.data.originZipCode;
+                rateToSave.zipcodeDestination = rateResponse.data.destinationZipCode;
+                rateToSave.neighborhoodOrigin = RATE.NOT_AVAILABLE_DATA;
+                rateToSave.neighborhoodDestination = RATE.NOT_AVAILABLE_DATA;
+                rateToSave.cityOrigin = genericRateObject.recipientLocation.cityName;
+                rateToSave.cityDestination = genericRateObject.shipperLocation.cityName;
+                rateToSave.countryCodeOrigin = genericRateObject.recipientLocation.countryISOCode;
+                rateToSave.countryCodeDestination = genericRateObject.shipperLocation.countryISOCode;
+                rateToSave.recipientStreetLines1 = RATE.NOT_AVAILABLE_DATA;
+                rateToSave.recipientReference = RATE.NOT_AVAILABLE_DATA;
+                rateToSave.shipperStreetLines1 = RATE.NOT_AVAILABLE_DATA;
+                rateToSave.shipperReference = RATE.NOT_AVAILABLE_DATA;
+                rateToSave.contentDescription = RATE.NOT_AVAILABLE_DATA;
+                rateToSave.contactNameOrigin = RATE.NOT_AVAILABLE_DATA;
+                rateToSave.contactNameDestination = RATE.NOT_AVAILABLE_DATA;
+                rateToSave.corporateNameOrigin = RATE.NOT_AVAILABLE_DATA;
+                rateToSave.corporateNameDestination = RATE.NOT_AVAILABLE_DATA;
+                rateToSave.phoneNumberOrigin = RATE.NOT_AVAILABLE_DATA;
+                rateToSave.phoneNumberDestination = RATE.NOT_AVAILABLE_DATA;
+                rateToSave.emailOrigin = RATE.NOT_AVAILABLE_DATA;
+                rateToSave.emailDestination = RATE.NOT_AVAILABLE_DATA;
+                rateToSave.deliveryType = firstPackage.shipmentRateDetail.dropOffType;
+                if (rateToSave.deliveryType === DropOff.REQUEST_COURIER) {
+                    rateToSave.pickupDate = new Date();
+                } else {
+                    rateToSave.pickupDate = new Date();
+                }
+                rateToSave.totalLength = totalDimensions.length;
+                rateToSave.totalWidth = totalDimensions.width;
+                rateToSave.totalWeight = totalDimensions.weight;
+                rateToSave.totalHeight = totalDimensions.height;
+                rateToSave.dimensionsPackages = PackageUtilService.getDimensionsJsonObjectOfAllPackages(genericRateObject.packages);
+                rateToSave.totalPrice = envioClickRate.total;
+                rateToSave.subTotalPrice = RATE.NOT_AVAILABLE_DATA_NUMBER;
+                rateToSave.chargesDetail = RATE.NOT_AVAILABLE_DATA;
+                // TODO - Create envioclick services migration and make methods
+                // rateToSave.serviceId = this.findEnvioClickServiceId(courierServices, envioClickRate.product);
+                // rateToSave.serviceName = this.findEnvioClickServiceName(rateToSave.serviceId);
+                rateToSave.extendedZoneShipment = false;
+                rateToSave.tenantId = genericRateObject.tenantId;
+                rateToSave.rated = true;
+                rateToSave.status = false;
+                rateToSave.courierEstimatedDeliveryDate = moment().add(Number(envioClickRate.deliveryDays), DAYS_STRING).toISOString();
+                ratesToSave.push(rateToSave);
+            });
+        }
+
+        return ratesToSave;
     }
 }

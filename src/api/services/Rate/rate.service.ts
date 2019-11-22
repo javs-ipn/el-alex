@@ -101,9 +101,13 @@ export class RateService {
         try {
             credential = await this.credentialService
                 .getCredentialByCourierIdTenantAndType(CourierId.ENVIO_CLICK, genericRate.tenantId, CredentialType.RATE);
+            const envioClickServices = credential.courier.courierServices;
             const rateRequest: EnvioClickRateRequest = await this.envioClickRateService.generateObject(genericRate);
             const rateResponse: EnvioClickRateResponse = await this.envioClickRateService.rateRequest(rateRequest, credential);
-            const genericRateResponse: any = await this.envioClickRateService.getGenericRateResponse(rateResponse, credential.courier);
+            // const genericRateResponse: any = await this.envioClickRateService.getGenericRateResponse(rateResponse, credential.courier);
+            const ratesToBeSaved = this.envioClickRateService.getRatesToBeSaved(genericRate, envioClickServices, rateResponse);
+            const savedRates = await this.rateRepository.saveRates(ratesToBeSaved);
+            const genericRateResponse = PackageUtilService.getGenericRateResponse(CourierEnum.DHL, savedRates);
             return Promise.resolve(genericRateResponse);
         } catch (error) {
             throw new GenericBussinessLogicError(error);
