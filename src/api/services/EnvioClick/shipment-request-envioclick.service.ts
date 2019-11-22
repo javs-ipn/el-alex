@@ -1,6 +1,5 @@
 import * as _ from 'lodash';
 import axios, { AxiosPromise, AxiosRequestConfig, AxiosResponse } from 'axios';
-// import { HashService } from '../Hash/hash-methods.service';
 import { Logger, LoggerInterface } from '../../../decorators/Logger';
 import { Service } from 'typedi';
 import { Rate } from 'src/api/models/Rate/rate.model';
@@ -13,7 +12,6 @@ export class ShipmentRequestEnvioClickService {
     public static REGULAR_PICKUP = 'REGULAR_PICKUP';
 
     constructor(
-        // private hashService: HashService,
         @Logger(__filename) private log: LoggerInterface
     ) {
     }
@@ -25,7 +23,6 @@ export class ShipmentRequestEnvioClickService {
      */
     public async shipmentRequest(shipmentRequest: ShipmentRequestEnvioClick, credential: Credential): Promise<any> {
         this.log.debug('calling for EnvioClick api shipment request');
-        // const hashedString = this.hashService.basicUsernamePassword(credential.username, credential.password);
         const axiosRequestConfig: AxiosRequestConfig = {
             headers: {
                 'Content-Type': 'application/json',

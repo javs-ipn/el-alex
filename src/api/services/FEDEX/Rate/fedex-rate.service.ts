@@ -9,7 +9,6 @@ import { CourierService } from '../../../models/CourierService/CourierService';
 import { DropOff } from '../../../types/enums/dropoff-enum';
 import { FedexBaseService } from '../Base/fedex-base.service';
 import { FedexCredential } from '../../../types/Credential/Fedex/FedexCredential/fedex-credential.inteface';
-// import { FedexNotificationResponse } from '../../../types/FEDEX/Response/Notification/fedex-notification-response.interface';
 import { FedexRateResponse } from '../../../types/FEDEX/Rate/FedexRateResponse/fedex-rate-response.interface';
 import { GenericBussinessLogicError } from '../../../errors/Generic/generic-bussinessLogic.error';
 import { GenericRateObject } from '../../../types/RateRequest/generic-rate-object.class';

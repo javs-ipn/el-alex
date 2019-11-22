@@ -23,7 +23,6 @@ export class TrackingMultiEnvioClickService {
      */
     public async trackingRequest(trackingRequest: TrackingRequestEnvioClick, credential: Credential): Promise<any> {
         this.log.debug('calling for dhl api shipment request');
-        // const hashedString = this.hashService.basicUsernamePassword(credential.username, credential.password);
         const axiosRequestConfig: AxiosRequestConfig = {
             headers: {
                 'Content-Type': 'application/json',

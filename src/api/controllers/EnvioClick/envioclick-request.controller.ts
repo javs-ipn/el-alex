@@ -62,23 +62,6 @@ export class EnvioClickRequestController {
      * @description Connects to EnvioClick rate service and response a rate request
      * @param genericRate Generic object Rate
      */
-    // @Post('/rate')
-    // public async rate(@Body() genericRate: GenericRateObject): Promise<GenericRateResponse> {
-    //     const credential = new Credential();
-    //     const courier = new Courier();
-    //     courier.rateAction = 'Quotation';
-    //     courier.rateRequestUrl = 'https://api.envioclickpro.com/api/v1/quotation';
-    //     credential.courier = courier;
-    //     credential.username = TEMPUSER;
-    //     credential.password = TEMPAPIKEY;
-    //     const response: GenericRateResponse = await this.handleEnvioClickRequest(genericRate, credential, courier);
-    //     return Promise.resolve(response);
-    // }
-
-    /**
-     * @description Connects to EnvioClick rate service and response a rate request
-     * @param genericRate Generic object Rate
-     */
     @Post('/rate-multipackages')
     public async rateMultiPackages(@Body() genericRate: GenericRateObject): Promise<any> {
         const credential = new Credential();
