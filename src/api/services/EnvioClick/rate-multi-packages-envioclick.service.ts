@@ -55,8 +55,6 @@ export class MultiRateEnvioClickService {
      * @returns {Promise<RateRequestObjectDHL>} - DHL rate request object
      */
     public generateObject(genericRateObject: GenericRateObject): Promise<MultiRateRequestEnvioClick> {
-        // TODO - get credential by tenantID
-        // const customerCredential = JSON.parse(this.getCredentialOptionsByTenant(genericRateObject.tenantId));
         const rateRequestEnvioClick: MultiRateRequestEnvioClick = {
             packages: [],
             destination_zip_code: genericRateObject.recipientLocation.zipcode,
