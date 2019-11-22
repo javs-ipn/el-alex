@@ -1,17 +1,19 @@
 import * as _ from 'lodash';
-import {Logger, LoggerInterface} from '../../../decorators/Logger';
-import {Service} from 'typedi';
-import axios, {AxiosPromise, AxiosRequestConfig, AxiosResponse} from 'axios';
-import {GenericRateObject} from 'src/api/types/RateRequest/generic-rate-object.class';
-import {Credential} from '../../models/Credential/Credential';
-import {EnvioClickRateRequest} from '../../types/EnvioClick/RateRequest/envioclick-rate-request.interface';
-import {EnvioClickRateResponse} from '../../types/EnvioClick/RateResponse/envioclick-rate-response.interface';
-import {Courier} from '../../models/Courier/Courier';
-import {Rate} from '../../types/EnvioClick/RateResponse/rate.interface';
+import { Logger, LoggerInterface } from '../../../decorators/Logger';
+import { Service } from 'typedi';
+import axios, { AxiosRequestConfig } from 'axios';
+import { GenericRateObject } from 'src/api/types/RateRequest/generic-rate-object.class';
+import { Credential } from '../../models/Credential/Credential';
+import { EnvioClickRateRequest } from '../../types/EnvioClick/RateRequest/envioclick-rate-request.interface';
+import { EnvioClickRateResponse } from '../../types/EnvioClick/RateResponse/envioclick-rate-response.interface';
+import { Courier } from '../../models/Courier/Courier';
+import { Rate } from '../../types/EnvioClick/RateResponse/rate.interface';
 import { GenericRateResponse } from 'src/api/types/RateResponse/generic-rate-response.interface';
 import { CourierRate } from 'src/api/types/RateResponse/courier-rate.interface';
 import { RateCourierServiceType } from 'src/api/types/RateResponse/rate-courier-service-type.interface';
 import * as moment from 'moment';
+import { HandlerErrorEnvioClick } from '../../errors/EnvioClick/handle-error-envioclick.error.class';
+import { EnvioClickErrorResponse } from '../../types/EnvioClick/RateResponse/ErrorResponse/error-response-envioclick.interface';
 
 const DAYS_STRING = 'days';
 @Service()
@@ -19,6 +21,7 @@ export class EnvioClickRateService {
 
     public static UNIT_OF_MEASUREMENT = 'SI';
     public static PAYMENT_INFO = 'DDP';
+    public static ERROR_STATUS = 'NOT OK';
 
     constructor(
         // private hashService: HashService,
@@ -34,6 +37,17 @@ export class EnvioClickRateService {
      */
     public async rateRequest(rateRequest: EnvioClickRateRequest, credential: Credential): Promise<any> {
         this.log.debug('Calling for EnvioClick api rate request');
+        try {
+            const axiosRequestConfig = this.getAxiosRequestConfig(credential);
+            const rateReponseEnvioClickApi = await axios.post(credential.courier.rateRequestUrl, rateRequest, axiosRequestConfig);
+            const rateResponse: EnvioClickRateResponse =  rateReponseEnvioClickApi.data;
+            return Promise.resolve(rateResponse);
+        } catch (error) {
+            this.handleEnvioClickError(error.response.data);
+        }
+    }
+
+    public getAxiosRequestConfig(credential: Credential): AxiosRequestConfig {
         const axiosRequestConfig: AxiosRequestConfig = {
             headers: {
                 'Content-Type': 'application/json',
@@ -41,18 +55,8 @@ export class EnvioClickRateService {
                 'Authorization': `${credential.password}`,
             },
         };
-        const apiEnvioClickRateResponse: AxiosPromise<any> = axios.post(credential.courier.rateRequestUrl, rateRequest, axiosRequestConfig);
-        return await apiEnvioClickRateResponse
-            .then((results: AxiosResponse<any>) => {
-                const rateResponse: any = results.data;
-                return Promise.resolve(rateResponse);
-            }).catch((error) => {
-                if (!_.has(error, 'request')) {
-                    throw error.message;
-                } else {
-                    throw error.response.data;
-                }
-            });
+
+        return axiosRequestConfig;
     }
 
     /**
@@ -124,5 +128,23 @@ export class EnvioClickRateService {
     public getCredentialOptionsByTenant(tenantId: string): string {
         const credential = '{"Account": 980129458}';
         return credential;
+    }
+
+    /**
+     * @description Inspect if response contains errors and throws exception if found it.
+     * @param {rateResponse} EnvioClickRateResponse The response request data.
+     * @returns {void}
+     */
+    public handleEnvioClickError(errorResponse: EnvioClickRateResponse): void {
+        console.log(errorResponse.error);
+        const errorData: EnvioClickErrorResponse = {
+            status: errorResponse.status,
+            status_messages: errorResponse.status_messages,
+            status_codes: errorResponse.status_codes,
+            error: errorResponse.error,
+        };
+        if (EnvioClickRateService.ERROR_STATUS === errorData.status) {
+            HandlerErrorEnvioClick.handlerRequestError(errorResponse);
+        }
     }
 }

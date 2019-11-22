@@ -33,6 +33,8 @@ import { Surcharges } from '../../../types/FEDEX/Rate/RateReplyDetail/surcharges
 import { Taxes } from '../../../types/FEDEX/Response/Shipment/ShipmentRating/taxes.interface';
 import { TotalInsured } from '../../../types/FEDEX/Request/TotalInsured/total-insured.interfaces';
 import { WebAuthenticationDetail } from '../../../types/Credential/Fedex/WebAuthenticationDetail/web-authentication-detail.interface';
+import { FedexNotificationResponse } from '../../../types/FEDEX/Response/Notification/fedex-notification-response.interface';
+import { HandlerErrorFedex } from '../../../errors/Fedex/handler-error-fedex.error.class';
 
 @Service()
 export class FedexRateService extends FedexBaseService {
@@ -209,8 +211,8 @@ export class FedexRateService extends FedexBaseService {
     private handleRateResponse(fedexRateResponse: FedexRateResponse): void {
         if (fedexRateResponse.HighestSeverity.toUpperCase() === this.ERROR
             || fedexRateResponse.HighestSeverity.toUpperCase() === this.FAILURE_MESSAGE) {
-            // const notification: FedexNotificationResponse = this.getFedexNotification(fedexRateResponse.Notifications);
-            // HandlerErrorFedex.handlerRequestError(notification);
+            const notification: FedexNotificationResponse = this.getFedexNotification(fedexRateResponse.Notifications);
+            HandlerErrorFedex.handlerRequestError(notification);
         }
     }
     /**
@@ -333,7 +335,7 @@ export class FedexRateService extends FedexBaseService {
         const chargesDetail: ChargesDetail[] = [];
         const surcharges = ratedShipmentDetails.ShipmentRateDetail.Surcharges;
         const taxes = ratedShipmentDetails.ShipmentRateDetail.Taxes;
-        chargesDetail.push({ concept: this.FREIGHT_CHARGE, amount: ratedShipmentDetails.ShipmentRateDetail.TotalNetFreight.Amount});
+        chargesDetail.push({ concept: this.FREIGHT_CHARGE, amount: ratedShipmentDetails.ShipmentRateDetail.TotalNetFreight.Amount });
         if (_.isArray(surcharges)) {
             _.forEach(surcharges, (surchargeForShipment: Surcharges) => {
                 chargesDetail.push({ concept: surchargeForShipment.Description, amount: surchargeForShipment.Amount.Amount });
