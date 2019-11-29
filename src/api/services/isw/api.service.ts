@@ -1,12 +1,15 @@
-import {Service} from 'typedi';
-import {OrmRepository} from 'typeorm-typedi-extensions';
-import {ClientRepository} from '../../repositories/Client/client.repository';
-import {CoffeShopRepository} from '../../repositories/CoffeShop/coffe-shop.repository';
+import { OrderRepository } from './../../repositories/Order/order.repository';
+import { Service } from 'typedi';
+import { OrmRepository } from 'typeorm-typedi-extensions';
+import { ClientRepository } from '../../repositories/Client/client.repository';
+import { CoffeShopRepository } from '../../repositories/CoffeShop/coffe-shop.repository';
 
 @Service()
 export class ApiService {
-    constructor(@OrmRepository() private clientRepository: ClientRepository,
-                @OrmRepository() private storeRepository: CoffeShopRepository) {
+    constructor(
+        @OrmRepository() private clientRepository: ClientRepository,
+        @OrmRepository() private storeRepository: CoffeShopRepository,
+        @OrmRepository() private orderRepository: OrderRepository) {
     }
 
     public async clientLogin(client: any): Promise<any> {
@@ -36,5 +39,26 @@ export class ApiService {
     public async storeRegister(store: any): Promise<any> {
         const registeredStore = await this.storeRepository.storeRegister(store);
         return Promise.resolve(registeredStore);
+    }
+
+    public async coffeShopProductsById(coffeShopId: number): Promise<any> {
+        const foundCoffeeShop = await this.storeRepository.getCoffeShopById(coffeShopId);
+        const relatedProducts = foundCoffeeShop.coffeeHasProduct;
+        return Promise.resolve(relatedProducts);
+    }
+
+    public async coffeShops(): Promise<any> {
+        const foundCoffeeShops = await this.storeRepository.getCoffeShops();
+        return Promise.resolve(foundCoffeeShops);
+    }
+
+    public async clientOrders(clientId: number): Promise<any> {
+        const clientOrders = await this.orderRepository.getOrdersByClientId(clientId);
+        return Promise.resolve(clientOrders);
+    }
+
+    public async coffeeShopOrders(coffeeShopId: number): Promise<any> {
+        const clientOrders = await this.orderRepository.getOrdersByCoffeShopId(coffeeShopId);
+        return Promise.resolve(clientOrders);
     }
 }

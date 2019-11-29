@@ -1,8 +1,10 @@
 import {
     Column,
     Entity,
+    ManyToMany,
     PrimaryGeneratedColumn
 } from 'typeorm';
+import { Order } from '../Order/Order';
 
 @Entity('client')
 export class Client {
@@ -25,4 +27,6 @@ export class Client {
     @Column({ name: 'student_ballot' })
     public studentBallot: string;
 
+    @ManyToMany(type => Order, order => order.clients)
+    public orders: Order[];
 }
