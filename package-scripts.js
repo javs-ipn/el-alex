@@ -255,7 +255,7 @@ module.exports = {
          */
         banner: {
             build: banner('build'),
-            serve: banner('courier-connection-api'),
+            serve: banner('Client-mobile-api'),
             testUnit: banner('test.unit'),
             testIntegration: banner('test.integration'),
             testE2E: banner('test.e2e'),

@@ -27,7 +27,7 @@ export class CreateTableCredential1567040298063 implements MigrationInterface {
                     type: 'nvarchar',
                     length: '50',
                     isNullable: false,
-                    comment: 'Credential name',
+                    comment: 'Client name',
                 },
                 {
                     name: 'tenant_id',
@@ -54,21 +54,21 @@ export class CreateTableCredential1567040298063 implements MigrationInterface {
                     type: 'nvarchar',
                     length: '20',
                     isNullable: false,
-                    comment: 'Credential`s type  SHIP | TRACKING | POD | RATE',
+                    comment: 'Client`s type  SHIP | TRACKING | POD | RATE',
                 },
                 {
                     name: 'username',
                     type: 'nvarchar',
                     length: '100',
                     isNullable: false,
-                    comment: 'Credential username',
+                    comment: 'Client username',
                 },
                 {
                     name: 'password',
                     type: 'nvarchar',
                     length: '100',
                     isNullable: false,
-                    comment: 'Credential password',
+                    comment: 'Client password',
                 },
                 {
                     name: 'created',
@@ -97,13 +97,6 @@ export class CreateTableCredential1567040298063 implements MigrationInterface {
                     default: 'GETDATE()',
                     isNullable: false,
                     comment: 'Updated date for the row',
-                },
-                {
-                    name: 'waybill_range_services',
-                    type: 'nvarchar',
-                    length: '100',
-                    isNullable: false,
-                    comment: 'Waybill range available',
                 },
             ],
         });

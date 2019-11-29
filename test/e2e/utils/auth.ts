@@ -1,6 +1,6 @@
 import * as nock from 'nock';
 
-import { User } from '../../../src/api/models/User';
+import { User } from '../../../src/api/models/Client';
 import { env } from '../../../src/env';
 
 export const fakeAuthenticationForUser = (user: User, persist = false): nock.Scope => {
